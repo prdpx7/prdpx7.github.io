@@ -27,7 +27,7 @@ npm set init.author.url "https://zuck007.github.io"
 ```
 
 ## Let's create our node module
-* before naming your module, check if there is an already a node module of same name!.
+* before naming your module, check if there is already a node module of same name!.
 * here our sample node module's objective is to extract json data of python package from pypi registry.
 
 * Create project dir and follow these steps. 
