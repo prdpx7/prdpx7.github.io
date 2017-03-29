@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{{ if .IsHome }}{{ .Site.Title }}{{ else }}{{ .Title }} | {{ .Site.Title }}{{ end }}</title>
+  <meta name="description" content="{{ with .Description }}{{ . }}{{ else }}{{ .Site.Params.description }}{{ end }}">
+  {{ $style := resources.Get "css/style.css" }}
+  <link rel="stylesheet" href="{{ $style.Permalink }}">
+  <link rel="icon" href="/images/favicon.ico">
+  <link rel="alternate" type="application/rss+xml" title="{{ .Site.Title }}" href="{{ "index.xml" | absURL }}">
+  <script>
+  (function() {
+    var t = localStorage.getItem('theme');
+    if (t === 'dark') document.documentElement.classList.add('dark');
+  })();
+  </script>
+</head>
+<body>
+  <button class="theme-toggle" id="theme-toggle" aria-label="Toggle dark mode">dark</button>
+  <main>
+    {{ block "main" . }}{{ end }}
+  </main>
+  <script>
+  (function() {
+    var btn = document.getElementById('theme-toggle');
+    var html = document.documentElement;
+    function update() {
+      var isDark = html.classList.contains('dark');
+      btn.textContent = isDark ? 'light' : 'dark';
+    }
+    update();
+    btn.addEventListener('click', function() {
+      html.classList.toggle('dark');
+      localStorage.setItem('theme', html.classList.contains('dark') ? 'dark' : 'light');
+      update();
+    });
+  })();
+
+  document.addEventListener('click', function(e) {
+    var btn = e.target.closest('.copy-btn');
+    if (!btn) return;
+    var pre = btn.closest('.code-block-wrapper').querySelector('pre code');
+    if (!pre) return;
+    navigator.clipboard.writeText(pre.textContent).then(function() {
+      btn.textContent = 'copied';
+      setTimeout(function() { btn.textContent = 'copy'; }, 1500);
+    });
+  });
+  </script>
+</body>
+</html>

@@ -1,0 +1,21 @@
+baseURL = "https://prdpx7.github.io/"
+languageCode = "en"
+title = "Pradeep Khileri"
+enableRobotsTXT = true
+
+[markup]
+  [markup.highlight]
+    noClasses = false
+  [markup.goldmark]
+    [markup.goldmark.renderer]
+      unsafe = true
+
+[params]
+  description = "Pradeep Khileri's personal blog"
+  author = "Pradeep Khileri"
+
+[outputs]
+  home = ["HTML", "RSS"]
+
+[permalinks]
+  posts = "/posts/:slug/"

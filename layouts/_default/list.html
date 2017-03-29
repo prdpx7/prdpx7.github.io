@@ -1,0 +1,17 @@
+{{ define "main" }}
+<nav class="back">
+  <a href="/">&larr; back to home</a>
+</nav>
+<header class="home-header" style="margin-top: 2rem;">
+  <h1>{{ .Title }}</h1>
+</header>
+{{ .Content }}
+<ul class="post-list">
+  {{ range .Pages }}
+  <li>
+    <span class="date">{{ .Date.Format "2006-01-02" }}</span>
+    <a href="{{ .RelPermalink }}">{{ .Title }}</a>
+  </li>
+  {{ end }}
+</ul>
+{{ end }}

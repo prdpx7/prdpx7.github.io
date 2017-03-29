@@ -1,0 +1,14 @@
+{{ define "main" }}
+<nav class="back">
+  <a href="/">&larr; back to home</a>
+</nav>
+<article>
+  <header>
+    <h1>{{ .Title }}</h1>
+    <p class="meta">{{ .Date.Format "2006-01-02" }} &middot; {{ .ReadingTime }} min read</p>
+  </header>
+  <div class="prose">
+    {{ .Content }}
+  </div>
+</article>
+{{ end }}
