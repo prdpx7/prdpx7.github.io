@@ -70,7 +70,7 @@ npm set init.author.url "https://zuck007.github.io"
         else url = "language not supported"; //'got' will handle invalid http request.
         return url;
     }
-    module.exports = (name,language){
+    module.exports = (name,language) => {
         const url = setpkgURL(name, language);
         const headers = {'User-Agent':'got node module'};
         return got(url, {json:true, headers})
