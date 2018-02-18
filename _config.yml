@@ -7,20 +7,20 @@
 
 # Site Settings
 locale                   : "en"
-title                    : "zuck007's blog"
+title                    : "prdpx7's blog"
 title_separator          : "|"
 name                     : "Pradeep Khileri"
 description              : "blog, projects etc."
-url                      : "https://zuck007.github.io"
+url                      : "https://prdpx7.github.io"
 baseurl                  : # the subpath of your site, e.g. "/blog"
-repository               : "zuck007/zuck007.github.io"
+repository               : "prdpx7/prdpx7.github.io"
 teaser                   : #
 # breadcrumbs            : false # true, false (default)
 words_per_minute         : 200
 comments:
   provider               : "disqus" # false (default), "disqus", "discourse", "facebook", "google-plus", "staticman", "custom"
   disqus:
-    shortname            : "https-zuck007-github-io" # https://help.disqus.com/customer/portal/articles/466208-what-s-a-shortname-
+    shortname            : "https-prdpx7-github-io" # https://help.disqus.com/customer/portal/articles/466208-what-s-a-shortname-
   discourse:
     server               : # https://meta.discourse.org/t/embedding-discourse-comments-via-javascript/31963 , e.g.: meta.discourse.org
   facebook:
@@ -82,14 +82,14 @@ author:
   bio              : "just a passionate programmer"
   location         : "Jodhpur"
   email            : "pradeepchoudhary009@gmail.com"
-  uri              : "https://zuck007.github.io"
+  uri              : "https://prdpx7.github.io"
   bitbucket        :
   codepen          :
   dribbble         :
   flickr           :
   facebook         :
   foursquare       :
-  github           : "zuck007"
+  github           : "prdpx7"
   google_plus      :
   keybase          :
   instagram        :
