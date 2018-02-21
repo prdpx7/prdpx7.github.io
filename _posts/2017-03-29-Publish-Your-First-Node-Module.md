@@ -23,7 +23,7 @@ After installing nodejs and creating npm account, go to the terminal and run the
 ```
 npm set init.author.name "Pradeep Khileri"
 npm set init.author.email "pradeepchoudhary009@gmail.com"
-npm set init.author.url "https://zuck007.github.io"
+npm set init.author.url "https://prdpx7.github.io"
 ```
 
 ## Let's create our node module
@@ -112,7 +112,7 @@ npm set init.author.url "https://zuck007.github.io"
 * write documentation for your node module.
     * [guide](https://guides.github.com/features/mastering-markdown/) on writing markdown.
     * write your documentation in readme.md file.
-    * [this](https://github.com/zuck007/pkgstat/blob/master/readme.md) is sample documentation of our node module.
+    * [this](https://github.com/prdpx7/pkgstat/blob/master/readme.md) is sample documentation of our node module.
 * final project structure(more or less) will look like this.
     ```
     projectDirOfOurNodeModule
@@ -133,12 +133,12 @@ npm publish
 ```
 * Create a github repo and push your code.
 * you don't want to push `node_modules/` to github because these dependencies will be installed when someone will install your module.
-* use tool like [GiG](https://github.com/zuck007/GiG) for generating .gitignore files for your project.
+* use tool like [GiG](https://github.com/prdpx7/GiG) for generating .gitignore files for your project.
 * [read](https://guides.github.com/activities/hello-world/) more about github.
 
 ## Final Note
 * this is just a smaller version of `pkgstat` module.
-* the full source code of `pkgstat` is [here](https://github.com/zuck007/pkgstat).
+* the full source code of `pkgstat` is [here](https://github.com/prdpx7/pkgstat).
 * other useful links -
     * an awesome tutorial on [node](https://github.com/workshopper/learnyounode#learn-you-the-nodejs-for-much-win)
     * more about [npm](https://docs.npmjs.com/getting-started/) 
