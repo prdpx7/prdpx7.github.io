@@ -6,10 +6,6 @@ header:
 categories:
     - Jekyll
 gallery:
-- url : /assets/images/sample_icpc/icpc_practice.jpg
-  image_path: /assets/images/sample_icpc/icpc_practice.jpg
-- url: /assets/images/sample_icpc/icpc.jpg
-  image_path: /assets/images/sample_icpc/icpc.jpg
 - url: /assets/images/sample_icpc/icpc_final.jpg
   image_path: /assets/images/sample_icpc/icpc_final.jpg
   title: "from L-R: aditi, nishit & me"
