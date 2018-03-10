@@ -28,6 +28,7 @@ from fractions import gcd
 lcm = lambda x,y : x*y/gcd(x,y)
 print lcm(18,4) #36
 ```
-
+#### Sample Github gist
+{% gist prdpx7/c7d9e6eb39574d0ab23180bbed0007cc %}
 #### Sample Image Gallery
 {% include gallery caption="My brief adventure @icpc,2015" %}
