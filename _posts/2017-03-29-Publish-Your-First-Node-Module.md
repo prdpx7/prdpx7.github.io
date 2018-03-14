@@ -1,6 +1,6 @@
 ---
 title: "Publish Your First Node Module"
-excerpt: "a small tutorial on node,npm and git"
+excerpt: "first steps with node,npm and git"
 header:
     overlay_image: "/assets/images/nodejs_header.jpg"
 categories:
