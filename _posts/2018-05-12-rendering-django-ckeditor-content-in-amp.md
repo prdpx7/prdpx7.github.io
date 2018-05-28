@@ -5,7 +5,7 @@ header:
     overlay_image: "/assets/images/header.jpg"
 categories:
     - Django
-author_profile: true
+author_profile: false
 ---
 {% include toc icon="bars" title="Table of Contents"%}
 {:toc}
@@ -53,7 +53,7 @@ So what we did is created a custom django template filter for all our amp pages,
 So here it is:
 {% gist prdpx7/f67ce628558b7872d6040aa25f75a292 %}
 
-So to use this in amp page we will do just this
+So to use this in amp page we will do just this:
 ```html
 {% raw %}
 {% load ampconvert %}
