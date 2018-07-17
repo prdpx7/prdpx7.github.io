@@ -4,12 +4,11 @@ permalink: /about/
 layout: archive
 author_profile: true
 ---
-Hey you,<br/>
-there are zillion other blogs out there and yet you ended up here!
+Hey there,<br/>
+This is Pradeep.<br/>
+I do programming for passion and for paying my bills.
 
-Anyways i am pradeep khileri.
-i have done B.E from MBM Jodhpur and currently working at a legal-tech startup [MyAdvo](https://myadvo.in).
-[[Résumé](/assets/pdf/resume.pdf)].<br/>
+I usually write on this blog on weekends or when i have no stuff to do.<br/>
 
 If you wanted to discuss about programming or any other stuff,
 you can reach out to me at `pradeepchoudhary009[at]gmail[dot]com`
