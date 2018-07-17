@@ -39,8 +39,8 @@ we'll do the latter one!
 sudo apt-get install notify-osd
 sudo pip install subliminal
 ```
-### Demo
 
+## Demo
 <img src="/assets/images/nautilus-script.gif" alt="demo" height="550" width="700" />
 
 ## Resources
