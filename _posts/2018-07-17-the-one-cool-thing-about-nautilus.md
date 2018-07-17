@@ -14,7 +14,7 @@ author_profile: false
 > Nautilus is the default file manager in Ubuntu [Gnome](https://help.ubuntu.com/community/DefaultFileManager).
 
 Now they just call it `Gnome Files` but still use `nautilus` name in settings and config files [etc](https://wiki.archlinux.org/index.php/GNOME/Files).<br/>
-Forget about this naming debate or which desktop enviroment is better?<br/>
+Forget about this naming debate or which desktop environment is better?<br/>
 (it's gnome btw but nvm).
 
 ## Nautilus Script
