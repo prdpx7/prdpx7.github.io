@@ -6,7 +6,7 @@ author_profile: true
 ---
 Hey there,<br/>
 This is Pradeep.<br/>
-I do programming for passion and for paying my bills.
+I do programming for passion and for paying my bills[[1](https://prdpx7.github.io/assets/pdf/resume.pdf)].
 
 I usually write on this blog on weekends or when i have no stuff to do.<br/>
 
