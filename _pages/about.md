@@ -8,7 +8,7 @@ Hey there,<br/>
 This is Pradeep.<br/>
 I do programming for passion and for paying my bills[[1](https://prdpx7.github.io/assets/pdf/resume.pdf)].
 
-I usually write on this blog on weekends or when i have no stuff to do.<br/>
+I usually write here sometimes when i have no stuff to do.<br/>
 
-If you wanted to discuss about programming or any other stuff,
+If you want to discuss about programming or any other stuff,
 you can reach out to me at `pradeepchoudhary009[at]gmail[dot]com`
