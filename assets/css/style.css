@@ -97,12 +97,19 @@ hr {
 /* Homepage */
 
 .home-header h1 {
-  font-size: 1.5rem;
-  font-weight: 700;
+  font-family: SFMono-Regular, Consolas, "Liberation Mono", Menlo, monospace;
+  font-size: 1rem;
+  font-weight: 500;
   margin-bottom: 0.25rem;
 }
 
+.home-header h1 .prompt {
+  color: hsl(var(--link));
+}
+
 .home-header p {
+  font-family: SFMono-Regular, Consolas, "Liberation Mono", Menlo, monospace;
+  font-size: 0.9rem;
   color: hsl(var(--muted-foreground));
 }
 

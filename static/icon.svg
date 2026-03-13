@@ -1,0 +1,32 @@
+<svg width="512" height="512" viewBox="0 0 96 96" xmlns="http://www.w3.org/2000/svg">
+  <style>
+    @media (prefers-color-scheme: dark) {
+      .ic-bg     { fill: #111111 }
+      .ic-border { stroke: #2e2e2e }
+      .ic-mono   { fill: #e2e2e2 }
+      .ic-accent { fill: #7ba7ff }
+    }
+    @media (prefers-color-scheme: light) {
+      .ic-bg     { fill: #f8f8f8 }
+      .ic-border { stroke: #e0e0e0 }
+      .ic-mono   { fill: #111111 }
+      .ic-accent { fill: #0000ee }
+    }
+  </style>
+
+  <rect class="ic-bg ic-border"
+        x="1" y="1" width="94" height="94" rx="18"
+        stroke-width="1"/>
+
+  <text class="ic-mono"
+        x="48" y="62"
+        font-family="'SF Mono', ui-monospace, 'Cascadia Code', 'Fira Mono', Menlo, monospace"
+        font-size="48"
+        font-weight="700"
+        text-anchor="middle">7</text>
+
+  <rect class="ic-accent"
+        x="62" y="66" width="7" height="10" rx="1">
+    <animate attributeName="opacity" values="1;0;1" dur="1.1s" repeatCount="indefinite"/>
+  </rect>
+</svg>
