@@ -206,7 +206,60 @@ window.Anims = (() => {
   }
 
   // --- Widget inits (filled in Tasks 5, 6, 7) ---
-  function initCell(rootId, opts) { throw new Error('not implemented'); }
+  // --- initCell ---
+  function initCell(rootId, opts) {
+    const root = document.getElementById(rootId);
+    if (!root) throw new Error(`initCell: no element with id ${rootId}`);
+    const vmax = (opts && opts.vmax) || 4.0;
+
+    const slider = root.querySelector('#v-slider');
+    slider.min = -vmax;
+    slider.max = vmax;
+
+    const wireTop = root.querySelector('#wire-top');
+    const wireBot = root.querySelector('#wire-bot');
+    const rotor = root.querySelector('.rotor');
+    const readout = root.querySelector('#v-readout');
+    const vLabel = root.querySelector('.v-label');
+    const rpmLabel = root.querySelector('.rpm-label');
+
+    const topFlow = flowElectrons(wireTop, { speed: 0, direction: 1, color: PALETTE.blue });
+    const botFlow = flowElectrons(wireBot, { speed: 0, direction: -1, color: PALETTE.blue });
+    const motor = spinMotor(rotor, { rpm: 0, direction: 0 });
+
+    const state = { voltage: 0 };
+
+    function render() {
+      const v = state.voltage;
+      const mag = Math.abs(v);
+      const dir = v > 0.05 ? 1 : v < -0.05 ? -1 : 0;
+      const rpm = mag * 30;
+
+      topFlow.update({ speed: mag, direction: dir });
+      botFlow.update({ speed: mag, direction: -dir });
+      motor.update({ rpm: dir === 0 ? 0 : rpm, direction: dir });
+
+      vLabel.textContent = `${v.toFixed(1)} V`;
+      if (dir === 0) {
+        readout.textContent = '0.0 V — motor stopped';
+        rpmLabel.textContent = 'stopped';
+      } else if (dir > 0) {
+        readout.textContent = `+${v.toFixed(1)} V → forward`;
+        rpmLabel.textContent = `${Math.round(rpm)} rpm ⟳`;
+      } else {
+        readout.textContent = `${v.toFixed(1)} V → reverse`;
+        rpmLabel.textContent = `${Math.round(rpm)} rpm ⟲`;
+      }
+    }
+
+    bindSlider(slider, v => { state.voltage = v; render(); });
+
+    return function destroy() {
+      topFlow.destroy();
+      botFlow.destroy();
+      motor.destroy();
+    };
+  }
   function initHBridge(rootId) { throw new Error('not implemented'); }
   function initCar(rootId) { throw new Error('not implemented'); }
 
