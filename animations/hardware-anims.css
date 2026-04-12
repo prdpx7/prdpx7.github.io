@@ -106,3 +106,25 @@ body {
     animation: none;
   }
 }
+
+/* dense widget wrapper — horizontal scroll fallback for very narrow screens */
+.hw-anim .svg-scroll {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+.hw-anim .svg-scroll svg {
+  min-width: 340px;
+}
+
+/* extra reduced-motion rules: stop flow squares visually */
+@media (prefers-reduced-motion: reduce) {
+  .hw-anim .electrons-host rect {
+    opacity: 0.5;
+  }
+}
+
+/* focus state for the car widget figure */
+.hw-anim[tabindex]:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 4px;
+}
