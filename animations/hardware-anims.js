@@ -358,7 +358,114 @@ window.Anims = (() => {
       motor.destroy();
     };
   }
-  function initCar(rootId) { throw new Error('not implemented'); }
+  const CAR_COMMANDS = {
+    up:    { chA: 'forward',  chB: 'forward'  },
+    down:  { chA: 'backward', chB: 'backward' },
+    left:  { chA: 'backward', chB: 'forward'  },
+    right: { chA: 'forward',  chB: 'backward' },
+    stop:  { chA: 'coast',    chB: 'coast'    },
+  };
+
+  function initCar(rootId) {
+    const root = document.getElementById(rootId);
+    if (!root) throw new Error(`initCar: no element with id ${rootId}`);
+
+    const wheels = ['L1', 'R1', 'L2', 'R2'].map(id => ({
+      id, el: root.querySelector('#wheel-' + id),
+    }));
+    const wheelMotors = Object.fromEntries(
+      wheels.map(w => [w.id, spinMotor(w.el, {})])
+    );
+
+    const flowA = flowElectrons(root.querySelector('#flow-a'), { speed: 0, color: PALETTE.blue });
+    const flowB = flowElectrons(root.querySelector('#flow-b'), { speed: 0, color: PALETTE.blue });
+
+    const gpio = {
+      ain1: root.querySelector('#gp-ain1'),
+      ain2: root.querySelector('#gp-ain2'),
+      pwma: root.querySelector('#gp-pwma'),
+      bin1: root.querySelector('#gp-bin1'),
+      bin2: root.querySelector('#gp-bin2'),
+      pwmb: root.querySelector('#gp-pwmb'),
+    };
+
+    const chAArrow = root.querySelector('#ch-a-arrow');
+    const chBArrow = root.querySelector('#ch-b-arrow');
+    const chAState = root.querySelector('#ch-a-state');
+    const chBState = root.querySelector('#ch-b-state');
+
+    const dpadBtns = [...root.querySelectorAll('.dpad button')];
+    const state = { command: 'stop', pwm: 255 };
+
+    function renderChannel(mode, side, pwmOn) {
+      const m = HBRIDGE_MODES[mode];
+      const pinPrefix = side === 'A' ? 'ain' : 'bin';
+      gpio[pinPrefix + '1'].classList.toggle('on', m.ain1 === 'H');
+      gpio[pinPrefix + '2'].classList.toggle('on', m.ain2 === 'H');
+      gpio[side === 'A' ? 'pwma' : 'pwmb'].classList.toggle('on', pwmOn);
+
+      const arrowEl = side === 'A' ? chAArrow : chBArrow;
+      const stateEl = side === 'A' ? chAState : chBState;
+      const pinNames = side === 'A' ? ['AIN1', 'AIN2'] : ['BIN1', 'BIN2'];
+      arrowEl.textContent =
+        mode === 'forward'  ? '→ fwd'  :
+        mode === 'backward' ? '← rev'  :
+        mode === 'brake'    ? '■ brake' :
+        'coast';
+      stateEl.textContent = `${pinNames[0]}=${m.ain1} ${pinNames[1]}=${m.ain2}`;
+    }
+
+    function render() {
+      const cmd = CAR_COMMANDS[state.command];
+      const pwmOn = state.command !== 'stop';
+
+      renderChannel(cmd.chA, 'A', pwmOn);
+      renderChannel(cmd.chB, 'B', pwmOn);
+
+      const chAMode = HBRIDGE_MODES[cmd.chA];
+      const chBMode = HBRIDGE_MODES[cmd.chB];
+      const flowSpeed = pwmOn ? (state.pwm / 255) * 4 : 0;
+      const rpm = pwmOn ? (state.pwm / 255) * 120 : 0;
+
+      flowA.update({ speed: flowSpeed, direction: chAMode.motorDir });
+      flowB.update({ speed: flowSpeed, direction: chBMode.motorDir });
+
+      wheelMotors.L1.update({ rpm, direction: chAMode.motorDir, decayModel: chAMode.decay });
+      wheelMotors.L2.update({ rpm, direction: chAMode.motorDir, decayModel: chAMode.decay });
+      wheelMotors.R1.update({ rpm, direction: chBMode.motorDir, decayModel: chBMode.decay });
+      wheelMotors.R2.update({ rpm, direction: chBMode.motorDir, decayModel: chBMode.decay });
+
+      dpadBtns.forEach(b => b.classList.toggle('active', b.dataset.cmd === state.command));
+    }
+
+    dpadBtns.forEach(b => b.addEventListener('click', () => {
+      state.command = b.dataset.cmd;
+      render();
+      root.focus();
+    }));
+
+    root.addEventListener('keydown', (e) => {
+      const keyMap = {
+        ArrowUp: 'up', ArrowDown: 'down',
+        ArrowLeft: 'left', ArrowRight: 'right',
+        ' ': 'stop', Escape: 'stop',
+      };
+      const cmd = keyMap[e.key];
+      if (cmd) {
+        e.preventDefault();
+        state.command = cmd;
+        render();
+      }
+    });
+
+    render();
+
+    return function destroy() {
+      Object.values(wheelMotors).forEach(m => m.destroy());
+      flowA.destroy();
+      flowB.destroy();
+    };
+  }
 
   return {
     PALETTE,

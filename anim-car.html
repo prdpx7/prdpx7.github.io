@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Animation 3 — Full Car Loop</title>
+  <link rel="stylesheet" href="animations/hardware-anims.css">
+  <style>
+    .hw-anim .region { background: var(--panel); border-radius: 4px; margin: 0 0 1rem; }
+    .hw-anim .region svg { background: transparent; }
+
+    /* D-pad */
+    .dpad {
+      display: grid;
+      grid-template-columns: repeat(3, 60px);
+      grid-template-rows: repeat(3, 60px);
+      gap: 6px;
+      justify-content: center;
+      margin: 1rem auto;
+    }
+    .dpad button {
+      width: 60px; height: 60px;
+      font-size: 20px;
+      padding: 0;
+    }
+    .dpad .up    { grid-column: 2; grid-row: 1; }
+    .dpad .left  { grid-column: 1; grid-row: 2; }
+    .dpad .stop  { grid-column: 2; grid-row: 2; }
+    .dpad .right { grid-column: 3; grid-row: 2; }
+    .dpad .down  { grid-column: 2; grid-row: 3; }
+
+    #anim-car-root:focus-visible { outline: 2px solid var(--focus); outline-offset: 4px; }
+
+    .gpio-dot { fill: var(--dim); }
+    .gpio-dot.on { fill: var(--green); }
+    .gpio-dot.on.pwm { fill: var(--purple); }
+  </style>
+</head>
+<body>
+
+<figure class="hw-anim" id="anim-car-root" tabindex="0" aria-label="Interactive 4-wheel robot car. Use arrow keys or the on-screen D-pad to drive.">
+
+  <!-- Region 1: physical car view -->
+  <div class="region">
+    <svg viewBox="0 0 400 300" aria-label="Top-down view of 4-wheel car with labeled wheels L1, R1, L2, R2.">
+      <!-- car ghost outline -->
+      <rect x="130" y="90" width="140" height="120" fill="none" stroke="var(--dim)" stroke-dasharray="4,3" rx="10"/>
+      <text x="200" y="155" text-anchor="middle" font-size="12" fill="var(--dim)" font-family="monospace">(car)</text>
+
+      <!-- L1 (front-left) -->
+      <rect x="70" y="60" width="50" height="50" fill="var(--panel)" stroke="var(--dim)"/>
+      <text x="95" y="50" text-anchor="middle" font-size="12" fill="var(--ink)" font-family="monospace">L1</text>
+      <g class="rotor" id="wheel-L1" transform="translate(95 85)">
+        <rect x="-15" y="-3" width="30" height="6" fill="var(--yellow)"/>
+        <rect x="-3" y="-15" width="6" height="30" fill="var(--yellow)"/>
+        <circle r="4" fill="var(--red)"/>
+      </g>
+
+      <!-- R1 (front-right) -->
+      <rect x="280" y="60" width="50" height="50" fill="var(--panel)" stroke="var(--dim)"/>
+      <text x="305" y="50" text-anchor="middle" font-size="12" fill="var(--ink)" font-family="monospace">R1</text>
+      <g class="rotor" id="wheel-R1" transform="translate(305 85)">
+        <rect x="-15" y="-3" width="30" height="6" fill="var(--yellow)"/>
+        <rect x="-3" y="-15" width="6" height="30" fill="var(--yellow)"/>
+        <circle r="4" fill="var(--red)"/>
+      </g>
+
+      <!-- L2 (rear-left) -->
+      <rect x="70" y="190" width="50" height="50" fill="var(--panel)" stroke="var(--dim)"/>
+      <text x="95" y="260" text-anchor="middle" font-size="12" fill="var(--ink)" font-family="monospace">L2</text>
+      <g class="rotor" id="wheel-L2" transform="translate(95 215)">
+        <rect x="-15" y="-3" width="30" height="6" fill="var(--yellow)"/>
+        <rect x="-3" y="-15" width="6" height="30" fill="var(--yellow)"/>
+        <circle r="4" fill="var(--red)"/>
+      </g>
+
+      <!-- R2 (rear-right) -->
+      <rect x="280" y="190" width="50" height="50" fill="var(--panel)" stroke="var(--dim)"/>
+      <text x="305" y="260" text-anchor="middle" font-size="12" fill="var(--ink)" font-family="monospace">R2</text>
+      <g class="rotor" id="wheel-R2" transform="translate(305 215)">
+        <rect x="-15" y="-3" width="30" height="6" fill="var(--yellow)"/>
+        <rect x="-3" y="-15" width="6" height="30" fill="var(--yellow)"/>
+        <circle r="4" fill="var(--red)"/>
+      </g>
+    </svg>
+  </div>
+
+  <!-- Region 2: control schematic -->
+  <div class="region">
+    <svg viewBox="0 0 720 360" aria-label="Schematic showing ESP32 GPIO states, TB6612FNG channel directions, and battery.">
+      <!-- ESP32 -->
+      <rect x="20" y="40" width="170" height="280" fill="var(--panel)" stroke="var(--dim)"/>
+      <text x="105" y="65" text-anchor="middle" font-size="13" fill="var(--ink)" font-weight="600">ESP32</text>
+
+      <text x="40" y="100" font-size="11" fill="var(--ink)" font-family="monospace">GPIO 27</text>
+      <circle cx="180" cy="97" r="5" class="gpio-dot" id="gp-ain1"/>
+      <text x="40" y="130" font-size="11" fill="var(--ink)" font-family="monospace">GPIO 26</text>
+      <circle cx="180" cy="127" r="5" class="gpio-dot" id="gp-ain2"/>
+      <text x="40" y="160" font-size="11" fill="var(--ink)" font-family="monospace">GPIO 14</text>
+      <circle cx="180" cy="157" r="5" class="gpio-dot pwm" id="gp-pwma"/>
+      <text x="40" y="210" font-size="11" fill="var(--ink)" font-family="monospace">GPIO 25</text>
+      <circle cx="180" cy="207" r="5" class="gpio-dot" id="gp-bin1"/>
+      <text x="40" y="240" font-size="11" fill="var(--ink)" font-family="monospace">GPIO 33</text>
+      <circle cx="180" cy="237" r="5" class="gpio-dot" id="gp-bin2"/>
+      <text x="40" y="270" font-size="11" fill="var(--ink)" font-family="monospace">GPIO 12</text>
+      <circle cx="180" cy="267" r="5" class="gpio-dot pwm" id="gp-pwmb"/>
+
+      <!-- wires from ESP32 to TBFNG -->
+      <line x1="180" y1="97"  x2="300" y2="97" stroke="var(--blue)" stroke-width="1.5"/>
+      <line x1="180" y1="127" x2="300" y2="127" stroke="var(--green)" stroke-width="1.5"/>
+      <line x1="180" y1="157" x2="300" y2="157" stroke="var(--purple)" stroke-width="1.5"/>
+      <line x1="180" y1="207" x2="300" y2="207" stroke="var(--blue)" stroke-width="1.5"/>
+      <line x1="180" y1="237" x2="300" y2="237" stroke="var(--green)" stroke-width="1.5"/>
+      <line x1="180" y1="267" x2="300" y2="267" stroke="var(--purple)" stroke-width="1.5"/>
+
+      <!-- TBFNG Channel A -->
+      <rect x="300" y="75" width="250" height="100" fill="var(--panel)" stroke="var(--dim)" stroke-dasharray="4,3"/>
+      <text x="425" y="98" text-anchor="middle" font-size="12" fill="var(--ink)" font-weight="600">Ch A — left motors</text>
+      <text x="425" y="130" text-anchor="middle" font-size="14" fill="var(--ink)" font-family="monospace" id="ch-a-arrow">→ fwd</text>
+      <text x="425" y="155" text-anchor="middle" font-size="11" fill="var(--ink)" font-family="monospace" id="ch-a-state">AIN1=H AIN2=L</text>
+
+      <!-- TBFNG Channel B -->
+      <rect x="300" y="185" width="250" height="100" fill="var(--panel)" stroke="var(--dim)" stroke-dasharray="4,3"/>
+      <text x="425" y="208" text-anchor="middle" font-size="12" fill="var(--ink)" font-weight="600">Ch B — right motors</text>
+      <text x="425" y="240" text-anchor="middle" font-size="14" fill="var(--ink)" font-family="monospace" id="ch-b-arrow">→ fwd</text>
+      <text x="425" y="265" text-anchor="middle" font-size="11" fill="var(--ink)" font-family="monospace" id="ch-b-state">BIN1=H BIN2=L</text>
+
+      <!-- flow paths from battery → channels → (abstract) motors -->
+      <g class="electrons-host">
+        <line id="flow-a" x1="550" y1="125" x2="640" y2="125" stroke="var(--dim)" stroke-width="1"/>
+      </g>
+      <g class="electrons-host">
+        <line id="flow-b" x1="550" y1="235" x2="640" y2="235" stroke="var(--dim)" stroke-width="1"/>
+      </g>
+      <text x="660" y="128" font-size="10" fill="var(--dim)" font-family="monospace">L</text>
+      <text x="660" y="238" font-size="10" fill="var(--dim)" font-family="monospace">R</text>
+
+      <!-- Battery -->
+      <rect x="280" y="305" width="160" height="50" fill="var(--panel)" stroke="var(--dim)"/>
+      <text x="360" y="325" text-anchor="middle" font-size="12" fill="var(--ink)" font-weight="600">2x 18650</text>
+      <text x="360" y="345" text-anchor="middle" font-size="11" fill="var(--red)" font-family="monospace">7.4 V</text>
+    </svg>
+  </div>
+
+  <!-- Region 3: D-pad -->
+  <div class="dpad" role="group" aria-label="Direction controls">
+    <button class="up"    data-cmd="up"    aria-label="Drive forward">↑</button>
+    <button class="left"  data-cmd="left"  aria-label="Turn left">←</button>
+    <button class="stop active" data-cmd="stop" aria-label="Stop">■</button>
+    <button class="right" data-cmd="right" aria-label="Turn right">→</button>
+    <button class="down"  data-cmd="down"  aria-label="Reverse">↓</button>
+  </div>
+
+</figure>
+
+<script src="animations/hardware-anims.js"></script>
+<script>
+  Anims.initCar('anim-car-root');
+</script>
+
+</body>
+</html>
