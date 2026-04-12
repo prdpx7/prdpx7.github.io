@@ -8,19 +8,33 @@
 </head>
 <body>
   <div class="hw-anim">
-    <h1 style="font-size: 1rem">Smoke test</h1>
-    <p id="status">checking...</p>
+    <h1 style="font-size: 1rem">Smoke test — DOM helpers</h1>
+    <p id="status"></p>
+
+    <p>Slider test: <input type="range" id="test-slider" min="0" max="10" value="3"> <span id="slider-val">-</span></p>
+
+    <p>Toggle test: <button id="test-toggle" aria-pressed="false">Toggle</button> <span id="toggle-val">-</span></p>
+
+    <p>Radio test:
+      <button class="r" data-value="a">A</button>
+      <button class="r" data-value="b">B</button>
+      <button class="r" data-value="c">C</button>
+      <span id="radio-val">-</span>
+    </p>
+
+    <p>Press-hold test: <button id="test-hold">Hold me</button> <span id="hold-val">idle</span></p>
   </div>
   <script src="animations/hardware-anims.js"></script>
   <script>
-    const status = document.getElementById('status');
-    if (window.Anims && typeof window.Anims.PALETTE === 'object') {
-      status.textContent = `OK — Anims loaded. Palette keys: ${Object.keys(window.Anims.PALETTE).join(', ')}`;
-      status.style.color = window.Anims.PALETTE.green;
-    } else {
-      status.textContent = 'FAIL — Anims not defined';
-      status.style.color = 'red';
-    }
+    Anims.bindSlider(document.getElementById('test-slider'),
+      v => document.getElementById('slider-val').textContent = v);
+    Anims.bindToggle(document.getElementById('test-toggle'),
+      v => document.getElementById('toggle-val').textContent = v);
+    Anims.bindRadioGroup([...document.querySelectorAll('.r')],
+      v => document.getElementById('radio-val').textContent = v);
+    Anims.bindPressHold(document.getElementById('test-hold'),
+      () => document.getElementById('hold-val').textContent = 'DOWN',
+      () => document.getElementById('hold-val').textContent = 'UP');
   </script>
 </body>
 </html>

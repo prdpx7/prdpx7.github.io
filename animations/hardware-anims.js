@@ -10,11 +10,62 @@ window.Anims = (() => {
     red: '#e74c3c', purple: '#9b59b6', focus: '#3498db',
   };
 
-  // --- DOM helpers (filled in Task 2) ---
-  function bindSlider(inputEl, onChange) { throw new Error('not implemented'); }
-  function bindToggle(buttonEl, onChange) { throw new Error('not implemented'); }
-  function bindRadioGroup(buttonEls, onChange) { throw new Error('not implemented'); }
-  function bindPressHold(btnEl, onDown, onUp) { throw new Error('not implemented'); }
+  // --- DOM helpers ---
+
+  function bindSlider(inputEl, onChange) {
+    const handler = () => onChange(Number(inputEl.value));
+    inputEl.addEventListener('input', handler);
+    handler();  // fire once to sync initial state
+    return () => inputEl.removeEventListener('input', handler);
+  }
+
+  function bindToggle(buttonEl, onChange) {
+    let state = buttonEl.getAttribute('aria-pressed') === 'true';
+    const handler = () => {
+      state = !state;
+      buttonEl.setAttribute('aria-pressed', String(state));
+      onChange(state);
+    };
+    buttonEl.addEventListener('click', handler);
+    return () => buttonEl.removeEventListener('click', handler);
+  }
+
+  function bindRadioGroup(buttonEls, onChange) {
+    const handler = (ev) => {
+      const btn = ev.currentTarget;
+      const value = btn.dataset.value;
+      buttonEls.forEach(b => b.classList.toggle('active', b === btn));
+      onChange(value);
+    };
+    buttonEls.forEach(b => b.addEventListener('click', handler));
+    return () => buttonEls.forEach(b => b.removeEventListener('click', handler));
+  }
+
+  function bindPressHold(btnEl, onDown, onUp) {
+    let isDown = false;
+    const down = (ev) => {
+      if (isDown) return;
+      isDown = true;
+      ev.preventDefault();
+      onDown();
+    };
+    const up = () => {
+      if (!isDown) return;
+      isDown = false;
+      onUp();
+    };
+    btnEl.addEventListener('pointerdown', down);
+    btnEl.addEventListener('pointerup', up);
+    btnEl.addEventListener('pointercancel', up);
+    btnEl.addEventListener('pointerleave', up);
+    btnEl.addEventListener('keydown', (e) => {
+      if (e.key === ' ' || e.key === 'Enter') down(e);
+    });
+    btnEl.addEventListener('keyup', (e) => {
+      if (e.key === ' ' || e.key === 'Enter') up();
+    });
+    return () => { /* listeners are on element; drop references */ };
+  }
 
   // --- Primitives (filled in Tasks 3 & 4) ---
   function spinMotor(rotorEl, initialState) { throw new Error('not implemented'); }
