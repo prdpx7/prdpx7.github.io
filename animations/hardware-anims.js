@@ -121,7 +121,89 @@ window.Anims = (() => {
     update({});  // kick off initial apply
     return { update, destroy };
   }
-  function flowElectrons(pathEl, initialState) { throw new Error('not implemented'); }
+  // --- flowElectrons ---
+  const SVG_NS = 'http://www.w3.org/2000/svg';
+
+  function flowElectrons(pathEl, initialState) {
+    const state = {
+      speed: 0,          // 0..~4 abstract units
+      direction: 1,      // -1 | 0 | +1
+      paused: false,
+      color: PALETTE.blue,
+      count: 8,          // number of squares along the path
+      size: 6,           // pixel size of each square
+      ...initialState,
+    };
+
+    const host = pathEl.parentNode;
+    if (!host) throw new Error('pathEl must be in the DOM before flowElectrons');
+
+    // Create squares
+    const L = pathEl.getTotalLength();
+    const squares = [];
+    for (let i = 0; i < state.count; i++) {
+      const r = document.createElementNS(SVG_NS, 'rect');
+      r.setAttribute('width', state.size);
+      r.setAttribute('height', state.size);
+      r.setAttribute('fill', state.color);
+      r.dataset.t = String(i / state.count);
+      host.appendChild(r);
+      squares.push(r);
+    }
+
+    let rafId = null;
+    let lastTick = performance.now();
+
+    function placeAt(r, t) {
+      const p = pathEl.getPointAtLength(t * L);
+      r.setAttribute('x', p.x - state.size / 2);
+      r.setAttribute('y', p.y - state.size / 2);
+    }
+
+    function tick(now) {
+      const dt = (now - lastTick) / 1000;
+      lastTick = now;
+
+      // speed in path-length per second: 1 full traversal takes (1 / (speed * BASE)) seconds
+      const BASE = 0.25;  // tuned for visual pleasantness at speed=4
+      const delta = state.speed * BASE * dt * state.direction;
+
+      for (const r of squares) {
+        let t = Number(r.dataset.t) + delta;
+        // wrap [0, 1)
+        t = ((t % 1) + 1) % 1;
+        r.dataset.t = String(t);
+        placeAt(r, t);
+      }
+
+      if (!state.paused && state.speed > 0 && state.direction !== 0) {
+        rafId = requestAnimationFrame(tick);
+      } else {
+        // draw once more at rest, then halt
+        for (const r of squares) placeAt(r, Number(r.dataset.t));
+        rafId = null;
+      }
+    }
+
+    function update(partial) {
+      Object.assign(state, partial);
+      if (partial.color) squares.forEach(r => r.setAttribute('fill', state.color));
+      if (rafId === null && !state.paused && state.speed > 0 && state.direction !== 0) {
+        lastTick = performance.now();
+        rafId = requestAnimationFrame(tick);
+      }
+    }
+
+    function destroy() {
+      if (rafId !== null) cancelAnimationFrame(rafId);
+      squares.forEach(r => r.remove());
+    }
+
+    // initial placement so squares show even when stopped
+    for (const r of squares) placeAt(r, Number(r.dataset.t));
+
+    return { update, destroy };
+  }
 
   // --- Widget inits (filled in Tasks 5, 6, 7) ---
   function initCell(rootId, opts) { throw new Error('not implemented'); }

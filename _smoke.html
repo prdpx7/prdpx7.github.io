@@ -39,6 +39,19 @@
     <button id="m-coast">Coast (decay)</button>
     <button id="m-brake">Brake (decay)</button>
     <button id="m-stop">Stop immediately</button>
+
+    <p>Flow test:</p>
+    <svg viewBox="0 0 400 100" style="width: 400px; background: var(--panel)">
+      <g class="electrons-host">
+        <path id="test-path" d="M20,50 L380,50" stroke="#555" stroke-width="1" fill="none"/>
+      </g>
+    </svg>
+    <br>
+    <button id="f-off">Speed 0</button>
+    <button id="f-slow">Speed 1</button>
+    <button id="f-fast">Speed 4</button>
+    <button id="f-rev">Reverse</button>
+    <button id="f-fwd">Forward</button>
   </div>
   <script src="animations/hardware-anims.js"></script>
   <script>
@@ -58,6 +71,14 @@
     document.getElementById('m-coast').onclick = () => motor.update({ rpm: 0, decayModel: 'coast' });
     document.getElementById('m-brake').onclick = () => motor.update({ rpm: 0, decayModel: 'brake' });
     document.getElementById('m-stop').onclick = () => motor.update({ rpm: 0, decayModel: null });
+
+    const flow = Anims.flowElectrons(document.getElementById('test-path'),
+      { speed: 0, direction: 1 });
+    document.getElementById('f-off').onclick  = () => flow.update({ speed: 0 });
+    document.getElementById('f-slow').onclick = () => flow.update({ speed: 1 });
+    document.getElementById('f-fast').onclick = () => flow.update({ speed: 4 });
+    document.getElementById('f-rev').onclick  = () => flow.update({ direction: -1, speed: 2 });
+    document.getElementById('f-fwd').onclick  = () => flow.update({ direction:  1, speed: 2 });
   </script>
 </body>
 </html>
