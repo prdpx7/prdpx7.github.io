@@ -260,7 +260,104 @@ window.Anims = (() => {
       motor.destroy();
     };
   }
-  function initHBridge(rootId) { throw new Error('not implemented'); }
+  const HBRIDGE_MODES = {
+    forward:  { ain1: 'H', ain2: 'L', mosfets: { Q1:1, Q2:0, Q3:0, Q4:1 }, motorDir:+1, decay: null },
+    backward: { ain1: 'L', ain2: 'H', mosfets: { Q1:0, Q2:1, Q3:1, Q4:0 }, motorDir:-1, decay: null },
+    coast:    { ain1: 'L', ain2: 'L', mosfets: { Q1:0, Q2:0, Q3:0, Q4:0 }, motorDir: 0, decay: 'coast' },
+    brake:    { ain1: 'H', ain2: 'H', mosfets: { Q1:0, Q2:0, Q3:1, Q4:1 }, motorDir: 0, decay: 'brake' },
+  };
+
+  const AINS_TO_MODE = {
+    'HL': 'forward', 'LH': 'backward', 'LL': 'coast', 'HH': 'brake',
+  };
+
+  function initHBridge(rootId) {
+    const root = document.getElementById(rootId);
+    if (!root) throw new Error(`initHBridge: no element with id ${rootId}`);
+
+    const pwmSlider = root.querySelector('#pwm-slider');
+    const modeBtns = [...root.querySelectorAll('.mode')];
+    const ain1Btn = root.querySelector('#ain1-toggle');
+    const ain2Btn = root.querySelector('#ain2-toggle');
+    const rotor = root.querySelector('.rotor');
+    const rpmLabel = root.querySelector('#hb-rpm');
+    const espAin1 = root.querySelector('#esp-ain1');
+    const espAin2 = root.querySelector('#esp-ain2');
+    const espPwm = root.querySelector('#esp-pwm');
+
+    const qEls = {
+      Q1: root.querySelector('#Q1'),
+      Q2: root.querySelector('#Q2'),
+      Q3: root.querySelector('#Q3'),
+      Q4: root.querySelector('#Q4'),
+    };
+
+    const wireA = root.querySelector('#wire-A');
+    const wireB = root.querySelector('#wire-B');
+    const flowA = flowElectrons(wireA, { speed: 0, color: PALETTE.blue });
+    const flowB = flowElectrons(wireB, { speed: 0, color: PALETTE.blue });
+    const motor = spinMotor(rotor, {});
+
+    const state = { mode: 'forward', pwm: 192 };
+
+    function setAinButton(btn, highLow) {
+      btn.textContent = highLow;
+      btn.setAttribute('aria-pressed', highLow === 'H' ? 'true' : 'false');
+    }
+
+    function render() {
+      const m = HBRIDGE_MODES[state.mode];
+
+      espAin1.textContent = m.ain1;
+      espAin2.textContent = m.ain2;
+      espPwm.textContent = String(state.pwm);
+      setAinButton(ain1Btn, m.ain1);
+      setAinButton(ain2Btn, m.ain2);
+
+      for (const key of ['Q1', 'Q2', 'Q3', 'Q4']) {
+        qEls[key].classList.toggle('on', m.mosfets[key] === 1);
+      }
+
+      modeBtns.forEach(b => b.classList.toggle('active', b.dataset.mode === state.mode));
+
+      const dutyScale = state.pwm / 255;
+      const rpm = m.motorDir === 0 ? 0 : dutyScale * 120;
+      const flowSpeed = m.motorDir === 0 ? 0 : dutyScale * 4;
+
+      flowA.update({ speed: flowSpeed, direction: m.motorDir });
+      flowB.update({ speed: flowSpeed, direction: -m.motorDir });
+
+      motor.update({ rpm, direction: m.motorDir, decayModel: m.decay });
+
+      rpmLabel.textContent = m.motorDir === 0
+        ? (m.decay === 'brake' ? 'braking' : 'coasting')
+        : `${Math.round(rpm)} rpm ${m.motorDir > 0 ? '⟳' : '⟲'}`;
+    }
+
+    bindRadioGroup(modeBtns, mode => { state.mode = mode; render(); });
+    bindSlider(pwmSlider, v => { state.pwm = v; render(); });
+
+    ain1Btn.addEventListener('click', () => {
+      const current = HBRIDGE_MODES[state.mode];
+      const newAin1 = current.ain1 === 'H' ? 'L' : 'H';
+      state.mode = AINS_TO_MODE[newAin1 + current.ain2];
+      render();
+    });
+    ain2Btn.addEventListener('click', () => {
+      const current = HBRIDGE_MODES[state.mode];
+      const newAin2 = current.ain2 === 'H' ? 'L' : 'H';
+      state.mode = AINS_TO_MODE[current.ain1 + newAin2];
+      render();
+    });
+
+    render();
+
+    return function destroy() {
+      flowA.destroy();
+      flowB.destroy();
+      motor.destroy();
+    };
+  }
   function initCar(rootId) { throw new Error('not implemented'); }
 
   return {
