@@ -68,7 +68,59 @@ window.Anims = (() => {
   }
 
   // --- Primitives (filled in Tasks 3 & 4) ---
-  function spinMotor(rotorEl, initialState) { throw new Error('not implemented'); }
+  function spinMotor(rotorEl, initialState) {
+    const state = { rpm: 0, direction: 0, decayModel: null, ...initialState };
+    let displayRpm = 0;
+    let lastTick = performance.now();
+    let rafId = null;
+
+    function apply() {
+      // Hide rotation entirely when displayRpm ~ 0
+      if (displayRpm < 1) {
+        rotorEl.classList.remove('spinning', 'reverse');
+        return;
+      }
+      rotorEl.style.setProperty('--spin-duration', `${60 / displayRpm}s`);
+      rotorEl.classList.add('spinning');
+      rotorEl.classList.toggle('reverse', state.direction < 0);
+    }
+
+    function tick(now) {
+      const dt = (now - lastTick) / 1000;
+      lastTick = now;
+      const target = Math.abs(state.rpm);
+
+      if (state.decayModel && target === 0 && displayRpm > 0) {
+        // coast: ~2s to stop; brake: ~0.3s to stop
+        const decayRate = state.decayModel === 'brake' ? (displayRpm / 0.3) : (displayRpm / 2);
+        displayRpm = Math.max(0, displayRpm - decayRate * dt);
+      } else {
+        displayRpm = target;
+      }
+      apply();
+      if (displayRpm > 0 || target > 0) {
+        rafId = requestAnimationFrame(tick);
+      } else {
+        rafId = null;
+      }
+    }
+
+    function update(partial) {
+      Object.assign(state, partial);
+      if (rafId === null) {
+        lastTick = performance.now();
+        rafId = requestAnimationFrame(tick);
+      }
+    }
+
+    function destroy() {
+      if (rafId !== null) cancelAnimationFrame(rafId);
+      rotorEl.classList.remove('spinning', 'reverse');
+    }
+
+    update({});  // kick off initial apply
+    return { update, destroy };
+  }
   function flowElectrons(pathEl, initialState) { throw new Error('not implemented'); }
 
   // --- Widget inits (filled in Tasks 5, 6, 7) ---
