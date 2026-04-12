@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Smoke test</title>
+  <link rel="stylesheet" href="animations/hardware-anims.css">
+</head>
+<body>
+  <div class="hw-anim">
+    <h1 style="font-size: 1rem">Smoke test</h1>
+    <p id="status">checking...</p>
+  </div>
+  <script src="animations/hardware-anims.js"></script>
+  <script>
+    const status = document.getElementById('status');
+    if (window.Anims && typeof window.Anims.PALETTE === 'object') {
+      status.textContent = `OK — Anims loaded. Palette keys: ${Object.keys(window.Anims.PALETTE).join(', ')}`;
+      status.style.color = window.Anims.PALETTE.green;
+    } else {
+      status.textContent = 'FAIL — Anims not defined';
+      status.style.color = 'red';
+    }
+  </script>
+</body>
+</html>

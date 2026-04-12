@@ -1,0 +1,108 @@
+/* Hardware animations — shared styles */
+
+:root {
+  --bg: #1a1a1f;
+  --panel: #161628;
+  --ink: #c8c8d0;
+  --dim: #555;
+  --blue: #3498db;
+  --green: #2ecc71;
+  --yellow: #f1c40f;
+  --red: #e74c3c;
+  --purple: #9b59b6;
+  --focus: #3498db;
+}
+
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: -apple-system, 'Segoe UI', system-ui, sans-serif;
+  margin: 0;
+  padding: 2rem 1rem;
+  line-height: 1.5;
+}
+
+.hw-anim {
+  max-width: 720px;
+  margin: 2rem auto;
+  color: var(--ink);
+  font-size: clamp(12px, 2.5vw, 14px);
+}
+
+.hw-anim svg {
+  width: 100%;
+  height: auto;
+  display: block;
+  background: var(--panel);
+  border-radius: 4px;
+}
+
+.hw-anim .hw-caption {
+  text-align: center;
+  font-style: italic;
+  color: var(--dim);
+  font-size: 0.85em;
+  margin: 0.5rem 0 1rem;
+}
+
+.hw-controls {
+  display: flex;
+  gap: 0.75rem;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin: 1rem 0;
+}
+
+/* slider */
+.hw-anim input[type="range"] {
+  width: 100%;
+  max-width: 420px;
+  margin: 0.5rem auto;
+  display: block;
+}
+
+/* buttons */
+.hw-anim button {
+  background: var(--panel);
+  color: var(--ink);
+  border: 1px solid var(--dim);
+  padding: 0.4rem 0.9rem;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: inherit;
+  font-family: inherit;
+}
+.hw-anim button.active {
+  background: var(--blue);
+  color: var(--bg);
+  border-color: var(--blue);
+}
+.hw-anim button:hover:not(.active) {
+  border-color: var(--ink);
+}
+.hw-anim button:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 2px;
+}
+
+/* rotor spin — used by spinMotor() */
+@keyframes rotor-spin {
+  to { transform: rotate(360deg); }
+}
+.hw-anim .rotor {
+  transform-origin: center;
+  transform-box: fill-box;
+}
+.hw-anim .rotor.spinning {
+  animation: rotor-spin var(--spin-duration, 1s) linear infinite;
+}
+.hw-anim .rotor.reverse {
+  animation-direction: reverse;
+}
+
+/* reduced-motion — freeze rotation and flow */
+@media (prefers-reduced-motion: reduce) {
+  .hw-anim .rotor.spinning {
+    animation: none;
+  }
+}
