@@ -131,6 +131,8 @@ The charger looks weird. but it cost only ₹14(~15 Cents). you need to use Type
 
 
 
+{{< anim-hbridge >}}
+
 {{< youtube gUCH7pqUL10 >}}
 
 
