@@ -66,6 +66,7 @@ Same principle applies to batteries. When battery dies - the potential differnce
 but the current goes to zero because there is no force to move the current. 
 In a way, you can say that Voltage is like a graviy for electrons - the difference make electrons move
 
+{{< anim-cell >}}
 
 Alright! let's go back to making assembling the car
 
