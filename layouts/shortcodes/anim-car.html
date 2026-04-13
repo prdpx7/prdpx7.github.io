@@ -1,0 +1,130 @@
+{{ $n := .Ordinal }}
+<figure class="hw-anim" id="anim-car-{{ $n }}" tabindex="0"
+        aria-label="4WD car control with D-pad — arrow keys or click">
+  <svg viewBox="0 0 720 720" preserveAspectRatio="xMidYMid meet">
+    <defs>
+      <linearGradient id="acar-wood-{{ $n }}" x1="0" x2="1" y1="0" y2="0">
+        <stop offset="0%"  stop-color="#d9b982"/>
+        <stop offset="50%" stop-color="#c49a5e"/>
+        <stop offset="100%" stop-color="#a6824a"/>
+      </linearGradient>
+      <radialGradient id="acar-tire-{{ $n }}" cx="0.5" cy="0.5" r="0.5">
+        <stop offset="0.72" stop-color="#2c2c2c"/>
+        <stop offset="1" stop-color="#0d0d0d"/>
+      </radialGradient>
+      <radialGradient id="acar-hub-{{ $n }}" cx="0.3" cy="0.3" r="0.9">
+        <stop offset="0%"  stop-color="#ffe27a"/>
+        <stop offset="55%" stop-color="#f2c034"/>
+        <stop offset="100%" stop-color="#6e4d08"/>
+      </radialGradient>
+      <linearGradient id="acar-chrome-{{ $n }}" x1="0" x2="0" y1="0" y2="1">
+        <stop offset="0%"  stop-color="#f5f5f5"/>
+        <stop offset="55%" stop-color="#c4c4c4"/>
+        <stop offset="100%" stop-color="#7d7d7d"/>
+      </linearGradient>
+      <radialGradient id="acar-dpad-{{ $n }}" cx="0.3" cy="0.3" r="0.9">
+        <stop offset="0%"  stop-color="#fafafa"/>
+        <stop offset="60%" stop-color="#b8b8b8"/>
+        <stop offset="100%" stop-color="#5a5a5a"/>
+      </radialGradient>
+      <filter id="acar-shadow-{{ $n }}" x="-20%" y="-20%" width="140%" height="140%">
+        <feGaussianBlur in="SourceAlpha" stdDeviation="3"/>
+        <feOffset dy="4" result="o"/>
+        <feComponentTransfer><feFuncA type="linear" slope="0.35"/></feComponentTransfer>
+        <feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge>
+      </filter>
+    </defs>
+
+    <g filter="url(#acar-shadow-{{ $n }})">
+      <rect x="180" y="30" width="360" height="240" rx="10" fill="url(#acar-wood-{{ $n }})"/>
+      <circle cx="200" cy="50"  r="5" fill="url(#acar-chrome-{{ $n }})"/>
+      <circle cx="520" cy="50"  r="5" fill="url(#acar-chrome-{{ $n }})"/>
+      <circle cx="200" cy="250" r="5" fill="url(#acar-chrome-{{ $n }})"/>
+      <circle cx="520" cy="250" r="5" fill="url(#acar-chrome-{{ $n }})"/>
+      <rect x="290" y="90"  width="70" height="48" rx="3" fill="#15402a"/>
+      <text x="325" y="117" text-anchor="middle" font-family="ui-monospace" font-size="9" fill="#f4ede0">ESP32</text>
+      <rect x="370" y="90"  width="70" height="48" rx="3" fill="#1a1a1f"/>
+      <text x="405" y="117" text-anchor="middle" font-family="ui-monospace" font-size="9" fill="#f4ede0">TB6612</text>
+      <text x="360" y="175" text-anchor="middle" font-family="ui-serif, Georgia, serif"
+            font-size="12" fill="#3a2510" font-style="italic">4WD chassis · overhead view</text>
+    </g>
+
+    {{ range $wheel := (slice
+        (dict "id" "L1" "cx" "150" "cy" "80")
+        (dict "id" "R1" "cx" "580" "cy" "80")
+        (dict "id" "L2" "cx" "150" "cy" "220")
+        (dict "id" "R2" "cx" "580" "cy" "220")) }}
+      <g id="anim-car-rotor-{{ $wheel.id }}-{{ $n }}" class="rotor"
+         transform="rotate(0 {{ $wheel.cx }} {{ $wheel.cy }})">
+        <circle cx="{{ $wheel.cx }}" cy="{{ $wheel.cy }}" r="40" fill="url(#acar-tire-{{ $n }})"/>
+        <circle cx="{{ $wheel.cx }}" cy="{{ $wheel.cy }}" r="28" fill="url(#acar-hub-{{ $n }})"/>
+        <circle cx="{{ $wheel.cx }}" cy="{{ $wheel.cy }}" r="10" fill="url(#acar-chrome-{{ $n }})"/>
+        <rect x="{{ add (int $wheel.cx) -2 }}" y="{{ add (int $wheel.cy) -30 }}"
+              width="4" height="28" fill="#3a2510"/>
+      </g>
+    {{ end }}
+
+    <text x="360" y="320" text-anchor="middle" font-family="ui-serif, Georgia, serif"
+          font-size="13" fill="#3a2510" font-style="italic">channel A → left wheels · channel B → right wheels</text>
+
+    <g filter="url(#acar-shadow-{{ $n }})">
+      <rect x="80" y="350" width="120" height="120" rx="6" fill="#15402a"/>
+      <text x="140" y="415" text-anchor="middle" font-family="ui-monospace" font-size="13" fill="#f4ede0">ESP32</text>
+    </g>
+    <g filter="url(#acar-shadow-{{ $n }})">
+      <rect x="280" y="360" width="160" height="50" rx="4" fill="#1a1a1f"/>
+      <text x="360" y="390" text-anchor="middle" font-family="ui-monospace" font-size="11" fill="#ffe27a">Channel A</text>
+    </g>
+    <g filter="url(#acar-shadow-{{ $n }})">
+      <rect x="280" y="420" width="160" height="50" rx="4" fill="#1a1a1f"/>
+      <text x="360" y="450" text-anchor="middle" font-family="ui-monospace" font-size="11" fill="#ffe27a">Channel B</text>
+    </g>
+
+    <path id="anim-car-wire-A-{{ $n }}"
+          d="M 200 385 L 280 385 M 440 385 C 560 385, 600 380, 620 370" stroke="#8a7a55" stroke-width="3" fill="none"/>
+    <path id="anim-car-wire-B-{{ $n }}"
+          d="M 200 445 L 280 445 M 440 445 C 560 445, 600 450, 620 460" stroke="#8a7a55" stroke-width="3" fill="none"/>
+    <g id="anim-car-flow-A-{{ $n }}"></g>
+    <g id="anim-car-flow-B-{{ $n }}"></g>
+    <text x="635" y="372" font-family="ui-monospace" font-size="10" fill="#3a2510">L1+L2</text>
+    <text x="635" y="468" font-family="ui-monospace" font-size="10" fill="#3a2510">R1+R2</text>
+
+    <g filter="url(#acar-shadow-{{ $n }})">
+      <circle cx="360" cy="615" r="95" fill="url(#acar-dpad-{{ $n }})"/>
+    </g>
+
+    {{ $btns := (slice
+        (dict "id" "up"    "cx" "360" "cy" "555" "label" "↑")
+        (dict "id" "left"  "cx" "300" "cy" "615" "label" "←")
+        (dict "id" "stop"  "cx" "360" "cy" "615" "label" "■" "accent" true)
+        (dict "id" "right" "cx" "420" "cy" "615" "label" "→")
+        (dict "id" "down"  "cx" "360" "cy" "675" "label" "↓")) }}
+
+    {{ range $btn := $btns }}
+      <g id="anim-car-btn-{{ $btn.id }}-{{ $n }}"
+         class="hw-svg-btn" role="button" tabindex="0"
+         data-value="{{ $btn.id }}"
+         aria-label="{{ $btn.id }}"
+         style="cursor:pointer">
+        <rect class="hw-svg-btn-ring" x="{{ add (int $btn.cx) -24 }}" y="{{ add (int $btn.cy) -24 }}"
+              width="48" height="48" rx="10" fill="none"/>
+        <circle cx="{{ $btn.cx }}" cy="{{ $btn.cy }}" r="24"
+                fill="{{ if $btn.accent }}#c77d2a{{ else }}url(#acar-chrome-{{ $n }}){{ end }}"
+                stroke="#5a5a5a" stroke-width="1.5"/>
+        <text x="{{ $btn.cx }}" y="{{ add (int $btn.cy) 8 }}" text-anchor="middle"
+              font-family="ui-serif, Georgia, serif" font-size="22"
+              fill="{{ if $btn.accent }}#f4ede0{{ else }}#3a2510{{ end }}"
+              style="pointer-events:none">{{ $btn.label }}</text>
+      </g>
+    {{ end }}
+  </svg>
+
+  <div class="hw-status" id="anim-car-status-{{ $n }}">idle — press arrow keys or click the D-pad</div>
+  <figcaption>click a direction (or use arrow keys) — watch how both channels steer the car</figcaption>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      if (window.Anims && Anims.initCar) Anims.initCar("anim-car-{{ $n }}");
+    });
+  </script>
+</figure>
