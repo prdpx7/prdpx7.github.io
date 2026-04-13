@@ -49,10 +49,7 @@
     var flA = Anims.flowCurrent(wireA, flowA, { color: '#ffa94d' });
     var flB = Anims.flowCurrent(wireB, flowB, { color: '#ffa94d' });
 
-    var current = null;
-
     function apply(cmd) {
-      current = cmd;
       var c = COMMANDS[cmd] || { a: 0, b: 0, brake: false, label: 'idle' };
       var mag = 10;
       motors.L1.setVelocity(c.a * mag, { brake: c.brake });
