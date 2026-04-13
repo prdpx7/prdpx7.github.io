@@ -85,6 +85,60 @@
     };
   }
 
+  var motors = [];
+  var rafId = null;
+
+  function tick() {
+    var reduced = prefersReducedMotion();
+    for (var i = 0; i < motors.length; i++) {
+      var m = motors[i];
+      if (reduced) {
+        m.vel = 0;
+        m.angle = 0;
+      } else {
+        var diff = m.target - m.vel;
+        var approaching = Math.abs(m.target) > Math.abs(m.vel);
+        var k = m.brake ? 0.08 : (approaching ? 0.06 : 0.015);
+        m.vel += diff * k;
+        if (Math.abs(m.vel) < 0.01 && m.target === 0) m.vel = 0;
+        m.angle = (m.angle + m.vel) % 360;
+      }
+      m.el.setAttribute('transform', 'rotate(' + m.angle + ' ' + m.cx + ' ' + m.cy + ')');
+    }
+    rafId = motors.length ? requestAnimationFrame(tick) : null;
+  }
+
+  function ensureTicking() {
+    if (rafId == null && motors.length) rafId = requestAnimationFrame(tick);
+  }
+
+  function spinMotor(rotorEl, opts) {
+    opts = opts || {};
+    var center = opts.center || [0, 0];
+    var entry = {
+      el: rotorEl,
+      cx: center[0],
+      cy: center[1],
+      vel: 0,
+      target: 0,
+      brake: false,
+      angle: 0,
+    };
+    motors.push(entry);
+    ensureTicking();
+    return {
+      setVelocity: function (target, opts2) {
+        entry.target = clamp(target, -18, 18);
+        entry.brake = !!(opts2 && opts2.brake);
+        ensureTicking();
+      },
+      destroy: function () {
+        var idx = motors.indexOf(entry);
+        if (idx >= 0) motors.splice(idx, 1);
+      },
+    };
+  }
+
   global.Anims = global.Anims || {};
   global.Anims.clamp = clamp;
   global.Anims.prefersReducedMotion = prefersReducedMotion;
@@ -92,4 +146,5 @@
   global.Anims.bindToggle = bindToggle;
   global.Anims.bindRadioGroup = bindRadioGroup;
   global.Anims.bindPress = bindPress;
+  global.Anims.spinMotor = spinMotor;
 })(window);
