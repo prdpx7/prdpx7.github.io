@@ -139,6 +139,82 @@
     };
   }
 
+  var flows = [];
+  var flowRaf = null;
+
+  function flowTick() {
+    var reduced = prefersReducedMotion();
+    var t = performance.now();
+    for (var i = 0; i < flows.length; i++) {
+      var f = flows[i];
+      if (reduced) { f.host.style.display = 'none'; continue; }
+      f.host.style.display = '';
+
+      f.speed += (f.targetSpeed - f.speed) * 0.04;
+
+      if (Math.abs(f.targetSpeed) > 0.01 && t - f.lastSpawn > 120 / Math.max(0.1, Math.abs(f.targetSpeed))) {
+        if (f.particles.length < f.max) {
+          var c = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+          c.setAttribute('r', f.radius);
+          c.setAttribute('fill', f.color);
+          c.setAttribute('opacity', '0');
+          f.host.appendChild(c);
+          f.particles.push({ el: c, p: f.targetSpeed > 0 ? 0 : f.length, born: t });
+        }
+        f.lastSpawn = t;
+      }
+
+      for (var j = f.particles.length - 1; j >= 0; j--) {
+        var part = f.particles[j];
+        part.p += f.speed * 1.6;
+        var fade = Math.min(1, (t - part.born) / 200);
+        part.el.setAttribute('opacity', fade * 0.95);
+        if (part.p < 0 || part.p > f.length) {
+          f.host.removeChild(part.el);
+          f.particles.splice(j, 1);
+          continue;
+        }
+        var pt = f.path.getPointAtLength(part.p);
+        part.el.setAttribute('cx', pt.x);
+        part.el.setAttribute('cy', pt.y);
+      }
+    }
+    flowRaf = flows.length ? requestAnimationFrame(flowTick) : null;
+  }
+
+  function ensureFlowTicking() {
+    if (flowRaf == null && flows.length) flowRaf = requestAnimationFrame(flowTick);
+  }
+
+  function flowCurrent(pathEl, hostEl, opts) {
+    opts = opts || {};
+    var entry = {
+      path: pathEl,
+      host: hostEl,
+      length: pathEl.getTotalLength(),
+      color: opts.color || '#ffa94d',
+      max: opts.count || 8,
+      radius: opts.radius || 3,
+      particles: [],
+      speed: 0,
+      targetSpeed: 0,
+      lastSpawn: 0,
+    };
+    flows.push(entry);
+    ensureFlowTicking();
+    return {
+      setRate: function (r) {
+        entry.targetSpeed = clamp(r, -1, 1) * 3;
+        ensureFlowTicking();
+      },
+      destroy: function () {
+        entry.particles.forEach(function (p) { if (p.el.parentNode) p.el.parentNode.removeChild(p.el); });
+        var idx = flows.indexOf(entry);
+        if (idx >= 0) flows.splice(idx, 1);
+      },
+    };
+  }
+
   global.Anims = global.Anims || {};
   global.Anims.clamp = clamp;
   global.Anims.prefersReducedMotion = prefersReducedMotion;
@@ -147,4 +223,5 @@
   global.Anims.bindRadioGroup = bindRadioGroup;
   global.Anims.bindPress = bindPress;
   global.Anims.spinMotor = spinMotor;
+  global.Anims.flowCurrent = flowCurrent;
 })(window);
