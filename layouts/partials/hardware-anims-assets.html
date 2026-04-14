@@ -1,7 +1,10 @@
 {{ if .Params.animations }}
 <link rel="stylesheet" href="{{ "animations/core.css" | relURL }}">
-<script src="{{ "animations/core.js" | relURL }}" defer></script>
-<script src="{{ "animations/anim-cell.js" | relURL }}" defer></script>
-<script src="{{ "animations/anim-hbridge.js" | relURL }}" defer></script>
-<script src="{{ "animations/anim-car.js" | relURL }}" defer></script>
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://esm.sh/three@0.160.0"
+  }
+}
+</script>
 {{ end }}

@@ -29,6 +29,23 @@
   display: block;
 }
 
+.hw-canvas-3d {
+  width: 100%;
+  height: 420px;
+  border-radius: 8px;
+  overflow: hidden;
+  background: #f4ede0;
+  position: relative;
+}
+@media (max-width: 480px) { .hw-canvas-3d { height: 320px; } }
+.hw-canvas-3d canvas { display: block; width: 100% !important; height: 100% !important; }
+.hw-canvas-3d .hw-canvas-loading {
+  position: absolute; inset: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-style: italic; color: var(--dim); font-family: ui-serif, Georgia, serif;
+  font-size: 0.9rem;
+}
+
 .hw-anim figcaption {
   margin-top: 0.75rem;
   text-align: center;
@@ -100,11 +117,13 @@
 }
 .hw-breathe { animation: hw-breathe 2s ease-in-out infinite; }
 
-/* SVG-drawn D-pad focus ring (anim-car) */
-.hw-svg-btn:focus-visible > .hw-svg-btn-ring {
-  stroke: var(--amber);
-  stroke-width: 3;
-  fill: none;
+/* Static SVG schematic (car-wiring) */
+.hw-schematic svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-width: 760px;
+  margin: 0 auto;
 }
 
 /* Reduced motion */
