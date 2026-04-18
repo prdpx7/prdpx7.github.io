@@ -1,0 +1,10 @@
+{{ if .Params.animations }}
+<link rel="stylesheet" href="{{ "animations/core.css" | relURL }}">
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://esm.sh/three@0.160.0"
+  }
+}
+</script>
+{{ end }}

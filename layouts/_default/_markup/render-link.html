@@ -1,0 +1,11 @@
+{{- if .Page.Params.footnotes -}}
+{{- $page := .Page -}}
+{{- $list := $page.Scratch.Get "footnote_list" -}}
+{{- if not $list -}}{{- $list = slice -}}{{- end -}}
+{{- $n := add (len $list) 1 -}}
+{{- $list = $list | append (dict "n" $n "url" .Destination "text" .Text "title" .Title) -}}
+{{- $page.Scratch.Set "footnote_list" $list -}}
+{{- .Text | safeHTML -}}<sup class="fn-ref"><a href="#fn-{{ $n }}" id="fnref-{{ $n }}">[{{ $n }}]</a></sup>
+{{- else -}}
+<a href="{{ .Destination | safeURL }}"{{ with .Title }} title="{{ . }}"{{ end }}>{{ .Text | safeHTML }}</a>
+{{- end -}}

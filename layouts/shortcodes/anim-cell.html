@@ -1,0 +1,21 @@
+{{ $n := .Ordinal }}
+<figure class="hw-anim" id="anim-cell-{{ $n }}">
+  <div class="hw-canvas-3d" data-3d-mount id="anim-cell-canvas-{{ $n }}">
+    <div class="hw-canvas-loading">preparing 3D scene…</div>
+  </div>
+
+  <div class="hw-controls">
+    <input type="range" class="hw-slider"
+           id="anim-cell-slider-{{ $n }}"
+           min="-4" max="4" step="0.1" value="0"
+           aria-label="voltage from negative four to positive four">
+    <span class="hw-readout" id="anim-cell-readout-{{ $n }}" data-readout>0.0 V</span>
+  </div>
+  <figcaption>voltage — drag to spin the motor</figcaption>
+  <div class="hw-credits">built with Claude</div>
+
+  <script type="module">
+    import { initCell } from '{{ "animations/anim-cell.js" | relURL }}';
+    initCell(document.getElementById('anim-cell-{{ $n }}'));
+  </script>
+</figure>

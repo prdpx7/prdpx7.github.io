@@ -1,0 +1,15 @@
+{{- $list := .Scratch.Get "footnote_list" -}}
+{{- if $list -}}
+<section class="footnotes" aria-label="References">
+  <h2>References</h2>
+  <ol>
+    {{- range $list }}
+    <li id="fn-{{ .n }}">
+      <a href="{{ .url | safeURL }}" target="_blank" rel="noopener noreferrer">{{ .url }}</a>
+      {{- if .title }} &mdash; {{ .title }}{{ else if .text }} &mdash; {{ .text }}{{ end }}
+      <a href="#fnref-{{ .n }}" class="fn-back" aria-label="Back to text">&#8617;</a>
+    </li>
+    {{- end }}
+  </ol>
+</section>
+{{- end -}}

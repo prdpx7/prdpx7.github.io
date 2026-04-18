@@ -1,0 +1,27 @@
+{{ $n := .Ordinal }}
+<figure class="hw-anim" id="anim-hbridge-{{ $n }}">
+  <div class="hw-canvas-3d" data-3d-mount id="anim-hbridge-canvas-{{ $n }}">
+    <div class="hw-canvas-loading">preparing 3D scene…</div>
+  </div>
+
+  <div class="hw-controls">
+    <button class="hw-btn" data-mode="forward"  data-active="true">Forward</button>
+    <button class="hw-btn" data-mode="backward">Backward</button>
+    <button class="hw-btn" data-mode="brake">Brake</button>
+  </div>
+  <div class="hw-controls">
+    <label style="font-size:0.85rem;color:var(--dim)">PWM</label>
+    <input type="range" class="hw-slider"
+           min="0" max="255" step="1" value="192"
+           data-pwm aria-label="PWM duty cycle">
+    <span class="hw-readout active" data-pwm-readout>192</span>
+  </div>
+  <div class="hw-status" data-status>Forward @ 192 / 255 — AIN1=H, AIN2=L</div>
+  <figcaption>choose a mode — watch AIN1 / AIN2 flip and which output wire carries current</figcaption>
+  <div class="hw-credits">built with Claude</div>
+
+  <script type="module">
+    import { initHBridge } from '{{ "animations/anim-hbridge.js" | relURL }}';
+    initHBridge(document.getElementById('anim-hbridge-{{ $n }}'));
+  </script>
+</figure>

@@ -384,3 +384,86 @@ html.dark .chroma .mo {
 html.dark .chroma .nf, html.dark .chroma .nc {
   color: hsl(280 50% 72%);
 }
+
+.prose-heading {
+  scroll-margin-top: 1rem;
+}
+
+.heading-anchor,
+.heading-anchor:link,
+.heading-anchor:visited,
+.heading-anchor:hover,
+.heading-anchor:active,
+.heading-anchor:focus {
+  color: hsl(var(--muted-foreground));
+  text-decoration: none;
+  font-weight: 400;
+  margin-left: 0.4em;
+  font-size: 0.85em;
+  opacity: 0;
+  transition: opacity 120ms;
+}
+
+.prose-heading:hover .heading-anchor,
+.heading-anchor:focus-visible {
+  opacity: 1;
+}
+
+.fn-ref {
+  font-size: 0.75em;
+  line-height: 0;
+  vertical-align: super;
+}
+
+.fn-ref a {
+  text-decoration: none;
+  padding: 0 0.1em;
+}
+
+.fn-ref a:hover {
+  text-decoration: underline;
+}
+
+.footnotes {
+  margin-top: 3rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid hsl(var(--border));
+  font-size: 0.92rem;
+}
+
+.footnotes h2 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 0.75rem;
+  color: hsl(var(--foreground));
+}
+
+.footnotes ol {
+  padding-left: 1.75rem;
+  margin: 0;
+}
+
+.footnotes li {
+  margin-bottom: 0.4rem;
+  color: hsl(var(--muted-foreground));
+}
+
+.footnotes li a {
+  word-break: break-word;
+}
+
+.fn-back {
+  margin-left: 0.35rem;
+  color: hsl(var(--muted-foreground));
+  text-decoration: none;
+}
+
+.fn-back:hover {
+  color: hsl(var(--link));
+}
+
+.footnotes li:target,
+.prose-heading:target {
+  background: hsl(var(--code-bg));
+  border-radius: 3px;
+}

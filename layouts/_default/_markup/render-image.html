@@ -1,0 +1,14 @@
+{{ $img := .Page.Resources.GetMatch .Destination }}
+{{ if $img }}
+  {{ $small := $img.Resize "480x webp" }}
+  {{ $medium := $img.Resize "768x webp" }}
+  {{ $large := $img.Resize "1200x webp" }}
+  <picture>
+    <source srcset="{{ $small.RelPermalink }}" media="(max-width: 480px)" type="image/webp">
+    <source srcset="{{ $medium.RelPermalink }}" media="(max-width: 768px)" type="image/webp">
+    <source srcset="{{ $large.RelPermalink }}" media="(max-width: 1200px)" type="image/webp">
+    <img src="{{ $medium.RelPermalink }}" alt="{{ .Text }}" loading="lazy" decoding="async">
+  </picture>
+{{ else }}
+  <img src="{{ .Destination }}" alt="{{ .Text }}" loading="lazy">
+{{ end }}
