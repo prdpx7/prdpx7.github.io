@@ -1,0 +1,31 @@
+{{ $n := .Ordinal }}
+<figure class="hw-anim" id="anim-pwm-{{ $n }}">
+  <div class="hw-pwm-layout">
+    <div class="hw-pwm-scope" id="anim-pwm-scope-{{ $n }}" aria-label="PWM pulse waveform"></div>
+    <div class="hw-canvas-3d hw-pwm-wheel" data-3d-mount id="anim-pwm-canvas-{{ $n }}">
+      <div class="hw-canvas-loading">preparing 3D scene…</div>
+    </div>
+  </div>
+
+  <div class="hw-controls">
+    <button class="hw-btn" data-duty="25">25%</button>
+    <button class="hw-btn" data-duty="50">50%</button>
+    <button class="hw-btn" data-duty="75">75%</button>
+    <button class="hw-btn" data-duty="100">100%</button>
+  </div>
+  <div class="hw-controls">
+    <label style="font-size:0.85rem;color:var(--dim)">duty</label>
+    <input type="range" class="hw-slider"
+           min="0" max="255" step="1" value="128"
+           data-pwm-duty aria-label="PWM duty cycle 0 to 255">
+    <span class="hw-readout active" data-pwm-readout>128</span>
+  </div>
+  
+  <figcaption>PWM: the chip flicks power on and off hundreds of times per second — duty cycle sets average voltage and motor speed</figcaption>
+  <div class="hw-credits">built with Claude</div>
+
+  <script type="module">
+    import { initPWM } from '{{ "animations/anim-pwm.js" | relURL }}';
+    initPWM(document.getElementById('anim-pwm-{{ $n }}'));
+  </script>
+</figure>

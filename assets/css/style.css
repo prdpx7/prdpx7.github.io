@@ -395,20 +395,17 @@ html.dark .chroma .nf, html.dark .chroma .nc {
 .heading-anchor:hover,
 .heading-anchor:active,
 .heading-anchor:focus {
-  color: hsl(var(--foreground));
-  text-decoration: none;
-}
-
-.heading-anchor::after {
-  content: " #";
   color: hsl(var(--muted-foreground));
+  text-decoration: none;
   font-weight: 400;
+  margin-left: 0.4em;
+  font-size: 0.85em;
   opacity: 0;
   transition: opacity 120ms;
 }
 
-.prose-heading:hover .heading-anchor::after,
-.heading-anchor:focus-visible::after {
+.prose-heading:hover .heading-anchor,
+.heading-anchor:focus-visible {
   opacity: 1;
 }
 

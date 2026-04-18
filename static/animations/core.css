@@ -117,6 +117,46 @@
 }
 .hw-breathe { animation: hw-breathe 2s ease-in-out infinite; }
 
+/* PWM animation — oscilloscope + wheel side-by-side */
+.hw-pwm-layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+  width: 100%;
+  overflow: hidden;
+}
+@media (max-width: 540px) {
+  .hw-pwm-layout { grid-template-columns: 1fr; }
+}
+
+.hw-pwm-scope {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  min-height: 0;
+  border-radius: 8px;
+  overflow: hidden;
+  background: #1a1410;
+  position: relative;
+}
+
+.hw-pwm-scope canvas {
+  display: block;
+  width: 100% !important;
+  height: 100% !important;
+}
+
+.hw-pwm-wheel {
+  height: auto !important;
+  min-height: 0 !important;
+  aspect-ratio: 4 / 3;
+}
+
+.hw-pwm-wheel canvas {
+  display: block;
+  width: 100% !important;
+  height: 100% !important;
+}
+
 /* Static SVG schematic (car-wiring) */
 .hw-schematic svg {
   display: block;
@@ -124,6 +164,15 @@
   height: auto;
   max-width: 760px;
   margin: 0 auto;
+}
+
+.hw-credits {
+  margin-top: 0.3rem;
+  text-align: right;
+  font-family: ui-serif, Georgia, serif;
+  font-size: 0.7rem;
+  font-style: italic;
+  color: var(--dim);
 }
 
 /* Reduced motion */
