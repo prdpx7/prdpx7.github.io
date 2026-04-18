@@ -60,18 +60,18 @@ Think of water flowing down from mountain top.
 
 * Now if the mountain has rough edges, bunch of rocks - the water will move slower.
 
-* Height difference b/w mountain top and ground -> Potential Entergy -> `Voltage`
-* The water flow rate -> how many eletrons moved per second -> `Current`
+* Height difference b/w mountain top and ground -> Potential Energy -> `Voltage`
+* The water flow rate -> how many electrons moved per second -> `Current`
 * The rocks, rough edges -> `Resistance`
 
 
 Same principle applies to batteries. 
-When battery dies - the potential differnce b/w its terminals goes to zero. 
+When battery dies - the potential difference b/w its terminals goes to zero. 
 the resistance is fixed. 
 the number of electrons remains the same in wire before and after. 
 but the current goes to zero because there is no force to move the current. 
 
-In a way, you can say that Voltage is like a graviy for electrons - the difference make the electrons move
+In a way, you can say that Voltage is like a gravity for electrons - the difference make the electrons move
 
 {{< anim-cell >}}
 
@@ -129,14 +129,14 @@ i wrote down explicitly and marked on the chassis
 
 a. On Top left - when Red -> +ive and Black -> -ive terminal on battery. the wheel moves forward
 
-b. On Rear left - When Red -> +ive and Black -> -ive terminak on battery. the wheel moves backward.
+b. On Rear left - When Red -> +ive and Black -> -ive terminal on battery. the wheel moves backward.
 ![left_side_car](4wd_car_left_side_wheels.jpeg) 
 
 This is critical step. Remember the wheel direction and connectivity with battery terminals.
 
 
 ### ESP32
-This is the the brain of your car. you will write logic(code) to trigger on,off on the pins. these pins are called `GPIO` (General Purpose Input Output) pins. 
+This is the brain of your car. you will write logic(code) to trigger on,off on the pins. these pins are called `GPIO` (General Purpose Input Output) pins. 
 a pin can be either in high(3.3V) or low(0V) state. 
 the `ESP32` is not going to directly power the motor - it is only going to give instructions.
 
@@ -146,7 +146,7 @@ If you pass the higher `Current` - the wheel will move faster.
 if you pass lower `Current` or `Voltage` - the motor will move slower.
 
 From `V = I x R` - Since input `V` is supplied by those 2x `18650 Li-ion` Batteries.  
-You can control the input `Current` by tweaking the `Resistance`. If you put a higher reistance before the motor - you can effectively reduce the `Current` it can get. 
+You can control the input `Current` by tweaking the `Resistance`. If you put a higher resistance before the motor - you can effectively reduce the `Current` it can get. 
 but higher `Resistance` means high temperature - not the best way to handle effective `Voltage` or `Current` 
 
 ### Pulse width modulation
@@ -170,18 +170,18 @@ the most important thing i learned is - it's all `MMIO` ([Memory Mapped IO](http
 You are writing program in C by interacting with predefined memory addresses on those pins in `ESP32` which eventually controlling the hardware.
 This [brilliant video by Artful Bytes](https://youtu.be/sp3mMwo3PO0?si=UiTYdgAU9qY9DywD) explained this mind blowing concept - i am still not sure i understand it but it's mindblowing nonetheless 
 
-My inital goal was to just move one side of wheels - with fixed set of instructions. 
+My initial goal was to just move one side of wheels - with fixed set of instructions. 
 Forward - Stop - Backward.  
 
 {{< youtube _Hih1muPegk >}}
-[You can checkout the code](https://github.com/prdpx7/eletronics-101/blob/master/firmware/motor_test_right/motor_test_right.ino) here
+[You can checkout the code](https://github.com/prdpx7/electronics-101/blob/master/firmware/motor_test_right/motor_test_right.ino) here
 
 ### Wiring everything
 You need to follow the instructions to wire the component - follow the pins - pins will follow the current. you will write programs to trigger 0/1 on the pins. 
 
 {{< anim-hbridge >}}
 
-You can follow the [detailed wiring instructions](https://prdpx7.github.io/eletronics-101/wiring-guide.html) here
+You can follow the [detailed wiring instructions](https://prdpx7.github.io/electronics-101/wiring-guide.html) here
 
 ## Up and running
 It took a lot of time to make this work because the H-Bridge i bought initially was not working properly. <br/>
