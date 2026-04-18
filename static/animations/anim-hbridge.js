@@ -86,12 +86,33 @@ export function initHBridge(root) {
   scene.background = new THREE.Color(0xf4ede0);
 
   // --- Orthographic top-down camera. World: XZ = floor, Y = up (toward camera). ---
-  // Frustum sized to fit: x ∈ [-7, 7], z ∈ [-3.5, 3.5]
-  const FRUSTUM_H = 8;
-  const aspect = width / height;
+  // Scene content spans x ∈ [-7.3, 8.0], z ∈ [-2.8, 4.4].
+  // We derive the frustum from the scene's content box so any aspect ratio fits.
+  const SCENE_W = 15.8;  // 8.0 - (-7.3) + 0.5 padding each side
+  const SCENE_H = 8.0;   // 4.4 - (-2.8) + 0.8 padding each side
+  const SCENE_CX = 0.35; // (8.0 + -7.3) / 2
+  const SCENE_CZ = 0.8;  // (4.4 + -2.8) / 2
+
+  function makeFrustum(w, h) {
+    const sceneAspect = SCENE_W / SCENE_H;
+    const vpAspect = w / h;
+    let fw, fh;
+    if (vpAspect >= sceneAspect) {
+      // viewport wider than scene — fit height, expand width
+      fh = SCENE_H;
+      fw = fh * vpAspect;
+    } else {
+      // viewport taller than scene — fit width, expand height
+      fw = SCENE_W;
+      fh = fw / vpAspect;
+    }
+    return { fw, fh };
+  }
+
+  const { fw: initFW, fh: initFH } = makeFrustum(width, height);
   const camera = new THREE.OrthographicCamera(
-    -FRUSTUM_H * aspect / 2,  FRUSTUM_H * aspect / 2,
-     FRUSTUM_H / 2,           -FRUSTUM_H / 2,
+    SCENE_CX - initFW / 2, SCENE_CX + initFW / 2,
+    SCENE_CZ + initFH / 2, SCENE_CZ - initFH / 2,
     0.1, 40
   );
   camera.position.set(0, 12, 1.4);
@@ -595,11 +616,11 @@ export function initHBridge(root) {
   const ro = new ResizeObserver(() => {
     const { w, h } = getSize();
     renderer.setSize(w, h);
-    const a = w / h;
-    camera.left = -FRUSTUM_H * a / 2;
-    camera.right = FRUSTUM_H * a / 2;
-    camera.top = FRUSTUM_H / 2;
-    camera.bottom = -FRUSTUM_H / 2;
+    const { fw, fh } = makeFrustum(w, h);
+    camera.left   = SCENE_CX - fw / 2;
+    camera.right  = SCENE_CX + fw / 2;
+    camera.top    = SCENE_CZ + fh / 2;
+    camera.bottom = SCENE_CZ - fh / 2;
     camera.updateProjectionMatrix();
   });
   ro.observe(mount);

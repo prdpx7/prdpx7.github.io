@@ -200,13 +200,29 @@ export function initPWM(root) {
   const scene = new THREE.Scene();
   scene.background = new THREE.Color(0xf4ede0);
 
-  // Same orthographic camera style as anim-cell (side view, flat)
-  const FRUSTUM_H = 3.6;
-  const aspect = width / height;
+  // Wheel occupies x ∈ [-1.1, 1.8], y ∈ [-1.1, 1.2] (with 0.6 padding).
+  const SCENE_W = 3.5;
+  const SCENE_H = 2.9;
+  const SCENE_CX = 0.35;
+  const SCENE_CY = 0.05;
+
+  function makeFrustum(w, h) {
+    const sceneAspect = SCENE_W / SCENE_H;
+    const vpAspect = w / h;
+    let fw, fh;
+    if (vpAspect >= sceneAspect) {
+      fh = SCENE_H; fw = fh * vpAspect;
+    } else {
+      fw = SCENE_W; fh = fw / vpAspect;
+    }
+    return { fw, fh };
+  }
+
+  const { fw: initFW, fh: initFH } = makeFrustum(width, height);
   const camera = new THREE.OrthographicCamera(
-    -FRUSTUM_H * aspect / 2,  FRUSTUM_H * aspect / 2,
-     FRUSTUM_H / 2,           -FRUSTUM_H / 2,
-     0.1, 40
+    SCENE_CX - initFW / 2, SCENE_CX + initFW / 2,
+    SCENE_CY + initFH / 2, SCENE_CY - initFH / 2,
+    0.1, 40
   );
   camera.position.set(0, 0.4, 10);
   camera.lookAt(0, 0.1, 0);
@@ -378,11 +394,11 @@ export function initPWM(root) {
     const { w, h } = getSize();
     if (w > 0 && h > 0) {
       renderer.setSize(w, h);
-      const a = w / h;
-      camera.left = -FRUSTUM_H * a / 2;
-      camera.right = FRUSTUM_H * a / 2;
-      camera.top = FRUSTUM_H / 2;
-      camera.bottom = -FRUSTUM_H / 2;
+      const { fw, fh } = makeFrustum(w, h);
+      camera.left   = SCENE_CX - fw / 2;
+      camera.right  = SCENE_CX + fw / 2;
+      camera.top    = SCENE_CY + fh / 2;
+      camera.bottom = SCENE_CY - fh / 2;
       camera.updateProjectionMatrix();
     }
   });

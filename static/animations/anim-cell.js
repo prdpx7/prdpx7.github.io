@@ -42,12 +42,29 @@ export function initCell(root) {
   scene.background = new THREE.Color(0xf4ede0);
 
   // Near-side orthographic view — battery, motor, wheel read as one horizontal line.
-  const FRUSTUM_H = 4.8;
-  const aspect = width / height;
+  // Scene content spans x ∈ [-3.9, 3.5], y ∈ [-0.9, 1.4] (with 0.5 padding each side).
+  const SCENE_W = 8.4;   // 3.5 - (-3.9) + 1.0 padding
+  const SCENE_H = 3.8;   // 1.4 - (-0.9) + 1.3 padding
+  const SCENE_CX = -0.2; // (3.5 + -3.9) / 2
+  const SCENE_CY = 0.35; // (1.4 + -0.9) / 2
+
+  function makeFrustum(w, h) {
+    const sceneAspect = SCENE_W / SCENE_H;
+    const vpAspect = w / h;
+    let fw, fh;
+    if (vpAspect >= sceneAspect) {
+      fh = SCENE_H; fw = fh * vpAspect;
+    } else {
+      fw = SCENE_W; fh = fw / vpAspect;
+    }
+    return { fw, fh };
+  }
+
+  const { fw: initFW, fh: initFH } = makeFrustum(width, height);
   const camera = new THREE.OrthographicCamera(
-    -FRUSTUM_H * aspect / 2,  FRUSTUM_H * aspect / 2,
-     FRUSTUM_H / 2,           -FRUSTUM_H / 2,
-     0.1, 40
+    SCENE_CX - initFW / 2, SCENE_CX + initFW / 2,
+    SCENE_CY + initFH / 2, SCENE_CY - initFH / 2,
+    0.1, 40
   );
   camera.position.set(1.4, 0.6, 10);
   camera.lookAt(0, 0.2, 0.6);
@@ -344,11 +361,11 @@ export function initCell(root) {
     const w = mount.clientWidth  || 720;
     const h = mount.clientHeight || 405;
     renderer.setSize(w, h);
-    const a = w / h;
-    camera.left = -FRUSTUM_H * a / 2;
-    camera.right = FRUSTUM_H * a / 2;
-    camera.top = FRUSTUM_H / 2;
-    camera.bottom = -FRUSTUM_H / 2;
+    const { fw, fh } = makeFrustum(w, h);
+    camera.left   = SCENE_CX - fw / 2;
+    camera.right  = SCENE_CX + fw / 2;
+    camera.top    = SCENE_CY + fh / 2;
+    camera.bottom = SCENE_CY - fh / 2;
     camera.updateProjectionMatrix();
   });
   ro.observe(mount);
