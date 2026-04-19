@@ -3,6 +3,7 @@ title: "Hardware is hard?"
 date: 2026-04-06
 animations: true
 footnotes: true
+bluesky: "https://bsky.app/profile/prdpx7.bsky.social/post/3mjud5vh3ws2o"
 ---
 > or: How I Learned to Stop Worrying and Admire Electronics
 

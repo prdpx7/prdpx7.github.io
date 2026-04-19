@@ -1,0 +1,182 @@
+{{ with .Params.bluesky }}
+<section class="comments" data-bsky-post="{{ . }}">
+  <h2>comments</h2>
+  <p class="bsky-prompt">
+    reply on
+    <a href="{{ . }}" target="_blank" rel="noopener">bluesky</a>
+    to join the thread.
+  </p>
+  <div class="bsky-thread" aria-live="polite"></div>
+  <noscript>javascript required to load replies. view the thread on <a href="{{ . }}">bluesky</a>.</noscript>
+</section>
+<script>
+(function () {
+  var root = document.querySelector('.comments[data-bsky-post]');
+  if (!root) return;
+  var thread = root.querySelector('.bsky-thread');
+  var postUrl = root.dataset.bskyPost;
+  var API = 'https://public.api.bsky.app/xrpc';
+  var MAX_DEPTH = 5;
+
+  function esc(s) {
+    return String(s).replace(/[&<>"']/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+    });
+  }
+
+  function linkify(text) {
+    return esc(text).replace(/(https?:\/\/[^\s<]+)/g, '<a href="$1" target="_blank" rel="noopener">$1</a>');
+  }
+
+  function relTime(iso) {
+    var d = (Date.now() - new Date(iso).getTime()) / 1000;
+    if (d < 60) return 'just now';
+    if (d < 3600) return Math.floor(d / 60) + 'm';
+    if (d < 86400) return Math.floor(d / 3600) + 'h';
+    if (d < 2592000) return Math.floor(d / 86400) + 'd';
+    return new Date(iso).toISOString().slice(0, 10);
+  }
+
+  function resolveHandle(handle) {
+    return fetch(API + '/com.atproto.identity.resolveHandle?handle=' + encodeURIComponent(handle))
+      .then(function (r) { return r.ok ? r.json() : Promise.reject(r); })
+      .then(function (j) { return j.did; });
+  }
+
+  function toAtUri(url) {
+    var m = url.match(/bsky\.app\/profile\/([^\/]+)\/post\/([^\/?#]+)/);
+    if (!m) return Promise.reject(new Error('not a bluesky post url'));
+    var actor = decodeURIComponent(m[1]);
+    var rkey = m[2];
+    var didPromise = actor.indexOf('did:') === 0 ? Promise.resolve(actor) : resolveHandle(actor);
+    return didPromise.then(function (did) {
+      return 'at://' + did + '/app.bsky.feed.post/' + rkey;
+    });
+  }
+
+  function renderImages(embed) {
+    var imgs = embed.images || [];
+    if (!imgs.length) return '';
+    var count = Math.min(imgs.length, 4);
+    return '<div class="bsky-images bsky-images-' + count + '">'
+      + imgs.slice(0, 4).map(function (img) {
+          return '<a class="bsky-image" href="' + esc(img.fullsize || img.thumb) + '" target="_blank" rel="noopener">'
+            + '<img src="' + esc(img.thumb) + '" alt="' + esc(img.alt || '') + '" loading="lazy">'
+            + '</a>';
+        }).join('')
+      + '</div>';
+  }
+
+  function renderExternal(embed) {
+    var ext = embed.external;
+    if (!ext || !ext.uri) return '';
+    var thumb = ext.thumb
+      ? '<img class="bsky-card-thumb" src="' + esc(ext.thumb) + '" alt="" loading="lazy">'
+      : '';
+    var host = '';
+    try { host = new URL(ext.uri).hostname.replace(/^www\./, ''); } catch (_) {}
+    return '<a class="bsky-card" href="' + esc(ext.uri) + '" target="_blank" rel="noopener">'
+      + thumb
+      + '<div class="bsky-card-body">'
+      +   (host ? '<div class="bsky-card-host">' + esc(host) + '</div>' : '')
+      +   '<div class="bsky-card-title">' + esc(ext.title || ext.uri) + '</div>'
+      +   (ext.description ? '<div class="bsky-card-desc">' + esc(ext.description) + '</div>' : '')
+      + '</div>'
+      + '</a>';
+  }
+
+  function renderEmbed(embed) {
+    if (!embed || !embed.$type) return '';
+    var t = embed.$type;
+    if (t === 'app.bsky.embed.images#view') return renderImages(embed);
+    if (t === 'app.bsky.embed.external#view') return renderExternal(embed);
+    if (t === 'app.bsky.embed.recordWithMedia#view') {
+      return renderEmbed(embed.media) + renderEmbed(embed.record && embed.record.record);
+    }
+    if (t === 'app.bsky.embed.record#view') {
+      var r = embed.record;
+      if (r && r.value && r.value.text) {
+        var h = (r.author && r.author.handle) || 'unknown';
+        return '<blockquote class="bsky-quote"><div class="bsky-quote-who">@' + esc(h) + '</div>'
+          + '<div class="bsky-text">' + linkify(r.value.text) + '</div></blockquote>';
+      }
+    }
+    return '';
+  }
+
+  function renderReply(node, depth) {
+    var post = node.post;
+    if (!post || !post.record) return '';
+    var author = post.author || {};
+    var handle = author.handle || 'unknown';
+    var display = author.displayName || handle;
+    var avatar = author.avatar
+      ? '<img class="bsky-avatar" src="' + esc(author.avatar) + '" alt="" loading="lazy">'
+      : '<span class="bsky-avatar bsky-avatar-fallback" aria-hidden="true"></span>';
+    var profileUrl = 'https://bsky.app/profile/' + encodeURIComponent(handle);
+    var permalink = 'https://bsky.app/profile/' + encodeURIComponent(handle)
+      + '/post/' + post.uri.split('/').pop();
+    var text = linkify(post.record.text || '');
+    var time = post.record.createdAt ? relTime(post.record.createdAt) : '';
+    var embed = renderEmbed(post.embed);
+    var stats = '';
+    if (post.likeCount || post.replyCount) {
+      stats = '<div class="bsky-stats">'
+        + (post.likeCount ? '<span>' + post.likeCount + ' likes</span>' : '')
+        + (post.replyCount ? '<span>' + post.replyCount + ' replies</span>' : '')
+        + '</div>';
+    }
+    var children = '';
+    if (depth < MAX_DEPTH) {
+      children = (node.replies || [])
+        .sort(function (a, b) {
+          return new Date(a.post.record.createdAt) - new Date(b.post.record.createdAt);
+        })
+        .map(function (r) { return renderReply(r, depth + 1); })
+        .join('');
+    } else if ((node.replies || []).length) {
+      children = '<a class="bsky-more" href="' + permalink + '" target="_blank" rel="noopener">'
+        + 'continue thread on bluesky &rarr;</a>';
+    }
+    return ''
+      + '<article class="bsky-reply">'
+      +   '<header class="bsky-header">'
+      +     avatar
+      +     '<a class="bsky-name" href="' + profileUrl + '" target="_blank" rel="noopener">'
+      +       esc(display)
+      +     '</a>'
+      +     '<span class="bsky-handle">@' + esc(handle) + '</span>'
+      +     '<a class="bsky-time" href="' + permalink + '" target="_blank" rel="noopener">' + esc(time) + '</a>'
+      +   '</header>'
+      +   '<div class="bsky-text">' + text + '</div>'
+      +   embed
+      +   stats
+      +   (children ? '<div class="bsky-children">' + children + '</div>' : '')
+      + '</article>';
+  }
+
+  function render(data) {
+    var replies = (data.thread && data.thread.replies) || [];
+    if (!replies.length) {
+      thread.innerHTML = '<p class="bsky-empty">no replies yet. be the first.</p>';
+      return;
+    }
+    replies.sort(function (a, b) {
+      return new Date(a.post.record.createdAt) - new Date(b.post.record.createdAt);
+    });
+    thread.innerHTML = replies.map(function (r) { return renderReply(r, 0); }).join('');
+  }
+
+  toAtUri(postUrl)
+    .then(function (atUri) {
+      return fetch(API + '/app.bsky.feed.getPostThread?depth=' + MAX_DEPTH + '&uri=' + encodeURIComponent(atUri));
+    })
+    .then(function (r) { return r.ok ? r.json() : Promise.reject(r); })
+    .then(render)
+    .catch(function () {
+      thread.innerHTML = '<p class="bsky-empty">could not load replies. view on <a href="'
+        + esc(postUrl) + '">bluesky</a>.</p>';
+    });
+})();
+</script>
+{{ end }}
