@@ -289,10 +289,6 @@ section ul li {
   border-left: 2px solid hsl(var(--border));
 }
 
-.about-projects > li:hover {
-  border-left-color: hsl(var(--link));
-}
-
 .proj-head {
   margin: 0 0 0.15rem 0;
 }
