@@ -48,6 +48,18 @@
       setTimeout(function() { btn.textContent = 'copy'; }, 1500);
     });
   });
+
+  function rot13(s) {
+    return s.replace(/[a-zA-Z]/g, function(c) {
+      var b = c <= 'Z' ? 65 : 97;
+      return String.fromCharCode((c.charCodeAt(0) - b + 13) % 26 + b);
+    });
+  }
+  document.querySelectorAll('.cipher-link').forEach(function(el) {
+    el.addEventListener('click', function() {
+      window.open(rot13(el.dataset.c), '_blank', 'noopener,noreferrer');
+    });
+  });
   </script>
 </body>
 </html>

@@ -1,0 +1,130 @@
+{{ define "main" }}
+<nav class="back">
+  <a href="/">&larr; back to home</a>
+</nav>
+
+<article class="about">
+  <section class="about-block">
+    <h2 class="about-h"># $ whoami --verbose</h2>
+    <p>
+      Software engineer, currently an SRE at <a href="https://blinkit.com/" target="_blank" rel="noopener noreferrer">Blinkit</a>.
+    </p>
+    <p>
+      On weekends, i read and build random stuff.
+    </p>
+  </section>
+
+  <section class="about-block">
+    <h2 class="about-h"># $ history | grep -i work</h2>
+    <ul class="about-jobs">
+      <li>
+        <p class="job-head">
+          <a href="https://blinkit.com/" target="_blank" rel="noopener noreferrer">Blinkit</a>
+          <span class="job-dates">2020 &ndash; present</span>
+        </p>
+        <ul class="job-roles">
+          <li>
+            <span class="role">SRE</span>
+            <span class="role-dates">2023 &ndash; present</span>
+            <span class="role-desc">- managing Kafka and Postgres, building platform tools.</span>
+          </li>
+          <li>
+            <span class="role">Software Engineer, Supply Chain (Warehouse)</span>
+            <span class="role-dates">2020 &ndash; 2023</span>
+            <span class="role-desc">- building microservices for warehouse operations.</span>
+          </li>
+        </ul>
+      </li>
+      <li>
+        <p class="job-head">
+          <a href="https://web.archive.org/web/20200331135205/https://www.myadvo.in/" target="_blank" rel="noopener noreferrer">MyAdvo</a>
+          <span class="job-dates">2017 &ndash; 2020</span>
+        </p>
+        <p class="job-desc">
+          My first startup out of college. Built a lot from scratch and learned along the way - Django, Postgres, Celery, scraping and mining legal datasets across India, and managing cloud infrastructure.
+        </p>
+      </li>
+      <li>
+        <p class="job-head">
+          <a href="https://www.isro.gov.in/" target="_blank" rel="noopener noreferrer">ISRO</a>
+          <span class="job-dates">Summer 2015</span>
+        </p>
+        <p class="job-desc">
+          A brief internship at ISRO. Spent most of it learning how to build Android apps.
+        </p>
+      </li>
+    </ul>
+  </section>
+
+  <section class="about-block">
+    <h2 class="about-h"># $ history | grep -i college</h2>
+    <p>
+      I used to do competitive programming in college - CodeChef, HackerRank, Codeforces. Also did ACM ICPC regionals in 2015 (Amritapuri, India).
+    </p>
+    <p>
+      Then i got hooked on Linux and open source, and started building random things on GitHub for fun.
+    </p>
+    <p>
+      Studied Computer Science at <a href="https://mbm.ac.in/" target="_blank" rel="noopener noreferrer">MBM Engineering College, Jodhpur</a>, graduating in 2017.
+    </p>
+  </section>
+
+  <section class="about-block">
+    <h2 class="about-h"># $ ls ~/projects/ &nbsp;<span class="c"># few of my side projects - bespoke hand written code before LLM happened</span></h2>
+    <ul class="about-projects">
+      <li>
+        <p class="proj-head"><a href="https://github.com/prdpx7/notes-cli" target="_blank" rel="noopener noreferrer">notes-cli</a></p>
+        <p class="proj-desc">daily markdown notes on the terminal, synced to a GitHub gist (your free remote DB).</p>
+      </li>
+      <li>
+        <p class="proj-head"><a href="https://github.com/prdpx7/go-fileserver" target="_blank" rel="noopener noreferrer">go-fileserver</a></p>
+        <p class="proj-desc">share files over WiFi via QR code.</p>
+      </li>
+      <li>
+        <p class="proj-head"><a href="https://github.com/prdpx7/GiG" target="_blank" rel="noopener noreferrer">GiG</a></p>
+        <p class="proj-desc">generate .gitignore files for any language.</p>
+      </li>
+      <li>
+        <p class="proj-head"><a href="https://github.com/prdpx7/magrrite" target="_blank" rel="noopener noreferrer">magrrite</a></p>
+        <p class="proj-desc">generate ASCII art from any image.</p>
+      </li>
+      <li>
+        <p class="proj-head"><a href="https://github.com/prdpx7/market-watch" target="_blank" rel="noopener noreferrer">market-watch</a></p>
+        <p class="proj-desc">a PWA for live market indices. Built during COVID in 2021, when Google stopped showing the NIFTY index on search for a few weeks; I wanted all the indices in one place.</p>
+      </li>
+      <li>
+        <p class="proj-head"><a href="https://github.com/prdpx7/Pickup-line" target="_blank" rel="noopener noreferrer">Pickup-line</a></p>
+        <p class="proj-desc">terrible pickup lines in your terminal. A silly CLI I built back in college.</p>
+      </li>
+    </ul>
+    <p class="about-muted">
+      Most of these were written over weekends and then forgotten. <a href="https://github.com/prdpx7" target="_blank" rel="noopener noreferrer">see the full graveyard &rarr;</a>
+    </p>
+  </section>
+
+  <section class="about-block">
+    <h2 class="about-h"># $ tail -f ~/now.log &nbsp;<span class="c"># what I'm into these days</span></h2>
+    <p>
+      Learning electronics from the ground up - ESP32, H-bridges, DC motors. i wrote about the early days of this in <a href="/posts/hardware-is-hard/">Hardware is hard?</a>
+    </p>
+    <p>
+      i also tweet occasionally - mostly half-formed thoughts and dumb stuff i find interesting: <a href="https://twitter.com/prdpx7" target="_blank" rel="noopener noreferrer">@prdpx7</a>.
+    </p>
+  </section>
+
+  <section class="about-block">
+    <h2 class="about-h"># $ echo $THIS_SITE</h2>
+    <p>
+      Built with Hugo. No trackers, no google analytics bullshit.
+    </p>
+    <p>
+      PS: if you find 3D animations in my blog posts - they're all vibe-coded with Claude.
+    </p>
+    <p>
+      PPS: all the posts on this blog are written by a human.
+    </p>
+  </section>
+
+  <p class="about-cursor"><span class="prompt">prdpx7@blog:~ $</span> <span class="blink">_</span></p>
+</article>
+{{ end }}
