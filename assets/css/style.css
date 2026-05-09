@@ -186,8 +186,10 @@ section ul li {
   margin: 0 0 0.5rem 0;
 }
 
-.about-h .c {
+.about .c {
+  color: hsl(var(--muted-foreground));
   opacity: 0.7;
+  font-weight: 400;
 }
 
 .about p {

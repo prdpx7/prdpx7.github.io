@@ -57,7 +57,12 @@
   }
   document.querySelectorAll('.cipher-link').forEach(function(el) {
     el.addEventListener('click', function() {
-      window.open(rot13(el.dataset.c), '_blank', 'noopener,noreferrer');
+      var decoded = rot13(el.dataset.c).replace(/^mailto:/i, '');
+      var textEl = el.querySelector('.cipher-text');
+      if (textEl) textEl.textContent = decoded;
+      var scope = el.parentElement || el;
+      scope.querySelectorAll('.cipher-hint').forEach(function(h) { h.remove(); });
+      el.setAttribute('aria-label', decoded);
     });
   });
   </script>
