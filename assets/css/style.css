@@ -320,6 +320,54 @@ section ul li {
   color: hsl(var(--link));
 }
 
+.pager {
+  margin-top: 2.5rem;
+  color: hsl(var(--muted-foreground));
+  font-family: var(--font-mono, ui-monospace, SFMono-Regular, Menlo, monospace);
+  font-size: 0.95rem;
+}
+
+.pager .prompt {
+  color: hsl(var(--link));
+  margin-right: 0.4rem;
+}
+
+.pager-cmd {
+  color: hsl(var(--link));
+  text-decoration: none;
+  border-bottom: 1px dashed currentColor;
+}
+
+.pager-cmd:hover,
+.pager-cmd:focus-visible {
+  text-decoration: none;
+  border-bottom-style: solid;
+  outline: none;
+}
+
+.pager-hint {
+  opacity: 0;
+  transition: opacity 0.15s ease;
+}
+
+.pager:hover .pager-hint,
+.pager:focus-within .pager-hint {
+  opacity: 1;
+}
+
+.pager kbd {
+  font-family: inherit;
+  font-size: 0.85em;
+  padding: 0 0.3em;
+  border: 1px solid hsl(var(--border, 0 0% 80%));
+  border-radius: 3px;
+  background: hsl(var(--muted, 0 0% 95%) / 0.4);
+}
+
+@media (max-width: 600px) {
+  .pager-hint { display: none; }
+}
+
 .blink {
   display: inline-block;
   animation: about-blink 1.1s steps(2, start) infinite;

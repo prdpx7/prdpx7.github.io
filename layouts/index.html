@@ -1,7 +1,7 @@
 {{ define "main" }}
 <header class="home-header">
   <h1><span class="prompt">prdpx7@blog:~ $</span> whoami</h1>
-  <p>Hobbyist Engineer <a href="/about/">more &rarr;</a></p>
+  <p>Hobbyist Engineer.</p>
 </header>
 
 <hr>
@@ -27,4 +27,10 @@
     {{ end }}
   </ul>
 </section>
+
+<p class="pager" data-pager="home">
+  <span class="prompt">prdpx7@blog:~ $</span>
+  <a href="/about/" class="pager-cmd" accesskey="m">more</a><span class="blink">_</span>
+  <span class="pager-hint c">&nbsp;# press <kbd>m</kbd></span>
+</p>
 {{ end }}

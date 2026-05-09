@@ -65,6 +65,18 @@
       el.setAttribute('aria-label', decoded);
     });
   });
+
+  document.addEventListener('keydown', function(e) {
+    if (e.metaKey || e.ctrlKey || e.altKey) return;
+    var t = e.target;
+    if (t && (t.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(t.tagName))) return;
+    var pager = document.querySelector('.pager[data-pager]');
+    if (!pager) return;
+    var where = pager.dataset.pager;
+    var k = e.key.toLowerCase();
+    if (where === 'home' && k === 'm') { e.preventDefault(); window.location.href = '/about/'; }
+    else if (where === 'about' && (k === 'l' || k === 'q')) { e.preventDefault(); window.location.href = '/'; }
+  });
   </script>
 </body>
 </html>
